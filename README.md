@@ -24,6 +24,7 @@ Text: #fafaf6
 * Create shared projects
 * Assign tasks to users
 * Chat with project partners
+* comment on milestones
 
 ## Frontend
 
