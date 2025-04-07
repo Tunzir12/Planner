@@ -5,6 +5,14 @@ Tddd27_2025_advanced_web_project
 
 A platform to keep track of project milestones, deadlines and todolists. 
 
+## Colorpallet
+
+#00A6FB
+#0582CA
+#006494
+#003554
+#051923
+
 ## Example pictures
 
 ## Features
