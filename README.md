@@ -1,5 +1,6 @@
 # GoalGetter
-Tddd27_2025_advanced_web_project
+
+![](./logo.jpg)
 
 ## Description
 
