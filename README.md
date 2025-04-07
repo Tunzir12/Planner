@@ -7,11 +7,10 @@ A platform to keep track of project milestones, deadlines and todolists.
 
 ## Colorpallet
 
-#00A6FB
-#0582CA
-#006494
-#003554
-#051923
+Primary: #3d6cb9
+Secondary: #00d1ff
+Accent: #00fff0
+Text: #fafaf6
 
 ## Example pictures
 
