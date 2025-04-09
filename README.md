@@ -20,7 +20,7 @@ Text: #fafaf6
 * Calendar view
 * Todolist view
 * Project view
-* Journal view
+* Journal view (perosnal/project)
 
 * Create shared projects
 * Assign tasks to users
