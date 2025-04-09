@@ -1,12 +1,12 @@
 # GoalGetter
 
-![](./logo.jpg)
+![Logo](./assets/logo.jpg)
 
 ## Description
 
-A platform to keep track of project milestones, deadlines and todolists. 
+A platform to keep track of project milestones, deadlines and todolists.
 
-## Colorpallet
+## Color pallet
 
 Primary: #3d6cb9
 Secondary: #00d1ff
@@ -35,6 +35,8 @@ Text: #fafaf6
 ## Backend
 
 * Firebase?
+
 ## prototype
 
-![](/frontend/src/assets/tddd27.png)
+![Prototype image](./assets/tddd27.png)
+
