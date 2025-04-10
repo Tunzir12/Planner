@@ -5,8 +5,8 @@ import logo from '../assets/logo_color.svg'
 
 const Register = () => {
   return (
-    <div class="flex h-screen bg-blue-900">
-      <div class="w-full max-w-xs m-auto rounded p-5 bg-blue-100 shadow-xl">
+    <div class="flex h-screen bg-gray-800">
+      <div class="w-full max-w-xs m-auto rounded p-5 bg-gray-100 shadow-xl">
         <header>
           <img src={logo} class="w-20 mx-auto mb-5" alt="Logo" />
         </header>
@@ -20,9 +20,9 @@ const Register = () => {
           <label class="block mb-2" for="password">Password</label>
           <input class="w-full p-2 mb-6 border-b-2 outline-none" type="pass" name="" id="" placeholder='Enter Password' /><br />
 
-          <input class="w-full bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 mb-6 rounded" type="submit" value="Register" />
+          <input class="w-full bg-gray-700 hover:bg-gray-800 text-white font-bold py-2 px-4 mb-6 rounded" type="submit" value="Register" />
 
-          <Link class="text-sm float-left hover:text-green-700" to='/' >Back to login</Link>
+          <Link class="text-sm float-left hover:text-gray-700" to='/' >Back to login</Link>
         </form>
       </div>
     </div>
