@@ -1,21 +1,28 @@
 
 import './App.css'
 
-import {Route, Routes, BrowserRouter} from 'react-router-dom'
-import Login from './components/login'
-import Home from './components/home'
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
+import SplashScreen from './pages/SplashScreen.jsx'
+import Login from './pages/Login.jsx'
+import Home from './pages/Home.jsx'
+import Projects from './pages/Projects.jsx'
+import Todo from './pages/Todo.jsx'
 
 function App() {
 
 
   return (
     <>
-    <BrowserRouter>
-    <Routes>
-    <Route path='/' element={<Home />} />
-    <Route path='/login' element={< Login />} />
-    </Routes>
-    </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<SplashScreen />} />
+          <Route path='/login' element={< Login />} />
+          <Route path='/home' element={< Home />} />
+          <Route path='/projects' element={< Projects />} />
+          <Route path='/todo' element={< Todo />} />
+
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

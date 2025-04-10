@@ -1,12 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Navbar from './navbar'
 
 const Login = () => {
   return (
     <div>
       <div className="form">
-        <Navbar />
 
         <label htmlFor="">email</label>
         <input type="email" placeholder='Email' /><br />

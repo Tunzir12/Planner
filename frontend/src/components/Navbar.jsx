@@ -8,7 +8,6 @@ const Navbar = () => {
 
   const tabs = [
     { name: 'Home', path: '/home' },
-    { name: 'Inbox', path: '/inbox' },
     { name: 'Todo', path: '/todo' },
     { name: 'Projects', path: '/projects' },
   ];
