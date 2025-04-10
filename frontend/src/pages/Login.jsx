@@ -12,7 +12,7 @@ const Login = () => {
         <label htmlFor="">Password</label>
         <input type="pass" name="" id="" placeholder='Password' /><br />
 
-        <Link >Log in</Link>
+        <Link to="/home">Log in</Link>
       </div>
     </div>
   )
