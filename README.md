@@ -1,6 +1,5 @@
-# GoalGetter
 
-![Logo](./assets/logo.jpg)
+# <img src="./assets/logo_color.svg" style="height:1em"> GoalGetter
 
 ## Description
 
@@ -39,4 +38,3 @@ Text: #fafaf6
 ## prototype
 
 ![Prototype image](./assets/tddd27.png)
-
