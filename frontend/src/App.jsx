@@ -2,7 +2,7 @@
 import './App.css'
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
-import SplashScreen from './pages/SplashScreen.jsx'
+import Register from './pages/Register.jsx'
 import Login from './pages/Login.jsx'
 import Home from './pages/Home.jsx'
 import Projects from './pages/Projects.jsx'
@@ -15,8 +15,8 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<SplashScreen />} />
-          <Route path='/login' element={< Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/' element={< Login />} />
           <Route path='/home' element={< Home />} />
           <Route path='/projects' element={< Projects />} />
           <Route path='/todo' element={< Todo />} />
