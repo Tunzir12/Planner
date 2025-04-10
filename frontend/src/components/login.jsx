@@ -5,19 +5,17 @@ import Navbar from './navbar'
 const Login = () => {
   return (
     <div>
+      <div className="form">
+        <Navbar />
 
+        <label htmlFor="">email</label>
+        <input type="email" placeholder='Email' /><br />
 
-        <div className="form">
-          <Navbar />
+        <label htmlFor="">Password</label>
+        <input type="pass" name="" id="" placeholder='Password' /><br />
 
-            <label htmlFor="">email</label>
-            <input type="email" placeholder='Email' /><br/>
-
-            <label htmlFor="">Password</label>
-            <input type="pass" name="" id="" placeholder='Password' /><br />
-
-            <Link >Log in</Link>
-        </div>
+        <Link >Log in</Link>
+      </div>
     </div>
   )
 }
