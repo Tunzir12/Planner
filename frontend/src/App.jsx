@@ -2,6 +2,7 @@
 import './App.css'
 
 import { Route, Routes, BrowserRouter } from 'react-router-dom'
+import Index from './pages/Index.jsx'
 import Register from './pages/Register.jsx'
 import Login from './pages/Login.jsx'
 import Home from './pages/Home.jsx'
@@ -15,8 +16,9 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+          <Route path='/' element={< Index />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/' element={< Login />} />
+          <Route path='/login' element={< Login />} />
           <Route path='/home' element={< Home />} />
           <Route path='/projects' element={< Projects />} />
           <Route path='/todo' element={< Todo />} />
