@@ -1,7 +1,7 @@
 
 import React from 'react'
 import Navbar from '../components/Navbar'
-import Calendar from '../components/calendar'
+import Calendar from '../components/Calendar'
 
 
 const Home = () => {
