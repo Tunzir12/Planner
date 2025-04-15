@@ -38,3 +38,40 @@ Text: #fafaf6
 ## prototype
 
 ![Prototype image](./assets/tddd27.png)
+
+## Milestones
+
+### Milestone 1
+
+* Dashboard with Calendar view
+* Todolist view
+* Projects View
+* Goal view
+* Journal view
+
+### Milestone 2
+
+* Defined database
+* Firebase integration
+* Firebase Authentication
+* Firebase Database
+
+### Milestone 3
+
+* Integrate database with views
+* Chat integration
+
+### Milestone 4
+
+* Fine tuning
+* Project Cleanup
+* Bug fixing
+
+## Timeline
+
+| Milestone |  Weeks |Deadline |
+| -------------- | --------------- | --------------- |
+| Milestone 1 | 17,18 | 25 April |
+| Milestone 2 |19,20| 8 May |
+| Milestone 3 |21,22| 23 May |
+| Milestone 4 |23| 6 June |
