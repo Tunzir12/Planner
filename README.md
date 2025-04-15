@@ -35,10 +35,6 @@ Text: #fafaf6
 
 * Firebase?
 
-## prototype
-
-![Prototype image](./assets/tddd27.png)
-
 ## Milestones
 
 ### Milestone 1
@@ -75,3 +71,7 @@ Text: #fafaf6
 | Milestone 2 |19,20| 8 May |
 | Milestone 3 |21,22| 23 May |
 | Milestone 4 |23| 6 June |
+
+## Prototype
+
+![Prototype image](./assets/tddd27.png)
