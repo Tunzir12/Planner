@@ -1,5 +1,5 @@
 
-# <img src="./assets/logo_color.svg" style="height:25px"> GoalGetter
+# ![](./assets/logo_color_smol.png) GoalGetter
 
 ## Description
 
