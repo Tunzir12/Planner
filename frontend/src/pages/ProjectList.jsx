@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import Table from '../components/Table'
 import { Link } from 'react-router-dom'
 
+import { getProjects } from '../util/Api.jsx'
 
 const HEADERS = [
   "Name", "Owner", "Milestones", "Deadline"
@@ -24,33 +25,7 @@ const projectToList = (pr) => (
 
 const ProjectList = () => {
 
-  var projects = [
-    {
-      name: "Project 1",
-      id: "0",
-      owner: "Me",
-      milestones:
-      {
-        total: 10,
-        completed: 5,
-      },
-
-      deadline: "Never",
-    },
-    {
-      name: "Hello",
-      id: "1",
-      owner: "Me",
-      milestones:
-      {
-        total: 30,
-        completed: 1,
-      },
-
-      deadline: "Never",
-    },
-  ];
-
+  var projects = getProjects();
 
   var list = projects.map(projectToList);
 
