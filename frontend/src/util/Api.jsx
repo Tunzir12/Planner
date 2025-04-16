@@ -77,9 +77,9 @@ const projects = [
   },
 ];
 
-const getProjects = () => (projects)
-const getProject = (id) => (projects[id])
+const getProjects = () => { return projects }
+const getProject = (id) => { return projects[id] }
 
-export default { getProjects, getProject }
+export { getProjects, getProject }
 
 
