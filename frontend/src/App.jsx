@@ -6,7 +6,8 @@ import Index from './pages/Index.jsx'
 import Register from './pages/Register.jsx'
 import Login from './pages/Login.jsx'
 import Home from './pages/Home.jsx'
-import Projects from './pages/Projects.jsx'
+import ProjectList from './pages/ProjectList.jsx'
+import Project from './pages/Project.jsx'
 import Todo from './pages/Todo.jsx'
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={< Login />} />
           <Route path='/home' element={< Home />} />
-          <Route path='/projects' element={< Projects />} />
+          <Route path='/projects' element={< ProjectList />} />
+          <Route path='/projects/:id' element={<Project />} />
           <Route path='/todo' element={< Todo />} />
 
         </Routes>

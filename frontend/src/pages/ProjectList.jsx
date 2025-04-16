@@ -22,12 +22,12 @@ const projectToList = (pr) => (
   ]
 )
 
-const Projects = () => {
+const ProjectList = () => {
 
   var projects = [
     {
       name: "Project 1",
-      id: "2069",
+      id: "0",
       owner: "Me",
       milestones:
       {
@@ -39,7 +39,7 @@ const Projects = () => {
     },
     {
       name: "Hello",
-      id: "1337",
+      id: "1",
       owner: "Me",
       milestones:
       {
@@ -64,4 +64,4 @@ const Projects = () => {
   )
 }
 
-export default Projects
+export default ProjectList
