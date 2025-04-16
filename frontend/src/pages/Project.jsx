@@ -8,6 +8,17 @@ const HEADERS = [
   "Name", "Assigned", "Progress", "Deadline"
 ]
 
+const goalToList = (goal) => (
+  [
+    <Link to={"/goal/0"} class="font-medium text-gray-900 whitespace-nowrap dark:text-white" >
+      {goal.title}
+    </Link>,
+    goal.assigned,
+    goal.status,
+    goal.deadline
+  ]
+)
+
 const Project = () => {
 
   const { id } = useParams();
@@ -26,10 +37,42 @@ const Project = () => {
       deadline: "Never",
 
       goals: [
-        ["Do thing", "Me", "Completed", "Yesterday"],
-        ["Do other thing", "Me", "Started", "Today"],
-        ["Do nothing", "Friend", "Not started", "Today"],
-        ["Chill", "Me, Friend", "Not started", "Tomorrow"],
+
+        {
+          title: "Do thing",
+          assigned: "Me",
+          status: "Completed",
+          deadline: "Yesterday",
+        },
+
+        {
+          title: "Do other thing",
+          assigned: "Me",
+          status: "Started",
+          deadline: "Today",
+        },
+
+        {
+          title:
+            "Do nothing",
+          assigned:
+            "Friend",
+          status:
+            "Not started",
+          deadline:
+            "Today",
+        },
+
+        {
+          title:
+            "Chill",
+          assigned:
+            "Me ",
+          status:
+            "Not started",
+          deadline:
+            "Tomorrow",
+        },
       ]
     },
     {
@@ -44,12 +87,24 @@ const Project = () => {
 
       deadline: "Never",
       goals: [
-        ["Thing", "", "C"]
+        {
+          title:
+            "Chill",
+          assigned:
+            "Me ",
+          status:
+            "Not started",
+          deadline:
+            "Tomorrow",
+        },
       ]
     },
   ];
 
   var project = projects[id];
+
+
+  const list = project.goals.map(goalToList);
 
   return (
     <div class="dark:bg-gray-900 min-h-screen h-full">
@@ -58,7 +113,7 @@ const Project = () => {
         <h1 class="px-6 py-4 text-gray-900 dark:text-white">
           {project.name}
         </h1>
-        <Table headers={HEADERS} data={project.goals} />
+        <Table headers={HEADERS} data={list} />
       </div>
     </div >
   )
