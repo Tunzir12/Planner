@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import Table from '../components/Table'
+import StatusTag from '../components/StatusTag.jsx'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom';
 
@@ -16,7 +17,7 @@ const goalToList = (goal) => (
       {goal.title}
     </Link>,
     goal.assigned,
-    goal.status,
+    <StatusTag statusId={goal.status} />,
     goal.deadline
   ]
 )

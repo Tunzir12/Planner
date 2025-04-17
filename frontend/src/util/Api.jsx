@@ -17,14 +17,14 @@ const projects = [
       {
         title: "Do thing",
         assigned: "Me",
-        status: "Completed",
+        status: 2,
         deadline: "Yesterday",
       },
 
       {
         title: "Do other thing",
         assigned: "Me",
-        status: "Started",
+        status: 1,
         deadline: "Today",
       },
 
@@ -34,7 +34,7 @@ const projects = [
         assigned:
           "Friend",
         status:
-          "Not started",
+          0,
         deadline:
           "Today",
       },
@@ -45,7 +45,7 @@ const projects = [
         assigned:
           "Me ",
         status:
-          "Not started",
+          0,
         deadline:
           "Tomorrow",
       },
@@ -69,7 +69,7 @@ const projects = [
         assigned:
           "Me ",
         status:
-          "Not started",
+          0,
         deadline:
           "Tomorrow",
       },
