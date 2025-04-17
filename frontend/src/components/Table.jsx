@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Table = ({ headers, data, dataToRow }) => {
+const Table = ({ headers, data }) => {
 
   return (
     <table class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400 ">
