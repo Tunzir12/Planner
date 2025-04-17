@@ -45,7 +45,7 @@ const projects = [
         assigned:
           "Me ",
         status:
-          0,
+          3,
         deadline:
           "Tomorrow",
       },

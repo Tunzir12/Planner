@@ -6,9 +6,12 @@ const Tag = ({ label, color }) => (
 
 const StatusTag = ({ statusId }) => {
   return (
-    tags[statusId]
+    statusId < tags.length ? tags[statusId] : unknownTag(statusId)
   )
 }
+
+
+const unknownTag = (statusId) => <Tag label={"Unkown (" + statusId + ")"} color={"text-red-400"} />
 
 const tags = [
   <Tag label="Not Started" color={"text-gray-400"} />,
