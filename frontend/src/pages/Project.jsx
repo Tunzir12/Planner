@@ -1,9 +1,11 @@
 import React from 'react'
+import { Link, useParams } from 'react-router-dom'
+
+import DetailsList from '../components/DetailsList'
+import Divider from '../components/Divider'
 import Navbar from '../components/Navbar'
+import StatusTag from '../components/StatusTag'
 import Table from '../components/Table'
-import StatusTag from '../components/StatusTag.jsx'
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom';
 
 import { getProject } from '../util/Api.jsx'
 
@@ -38,30 +40,6 @@ const projectToDescriptionList = (project) => (
   ]
 )
 
-// Helper components 
-const ProjectInfo = ({ headers, data }) => (
-  <div class="flow-root my-6">
-    <dl class="-my-3 divide-y divide-gray-200 text-sm dark:divide-gray-700">
-      {headers.map((header, index) => (
-        <div class="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-          <dt class="font-medium text-gray-900 dark:text-white">{header}</dt>
-          <dd class="text-gray-700 sm:col-span-2 dark:text-gray-200">{data[index]}</dd>
-        </div>
-      ))}
-    </dl>
-  </div>
-)
-
-
-const Divider = ({ title }) => (
-  <span class="flex items-center my-3">
-    <span class="shrink-0 pe-4 text-gray-900 dark:text-white">{title}</span>
-    <span class="h-px flex-1 bg-gray-300 dark:bg-gray-600"></span>
-  </span>
-
-)
-
-
 // Main component
 const Project = () => {
 
@@ -79,7 +57,7 @@ const Project = () => {
         <h1 class=" py-4 text-gray-900 dark:text-white text-2xl">
           {project.name}
         </h1>
-        <ProjectInfo headers={DescriptionHeaders} data={descriptionList} />
+        <DetailsList headers={DescriptionHeaders} data={descriptionList} />
         <Divider title="Goals" />
         <Table headers={GoalHeaders} data={goalList} />
       </div>
