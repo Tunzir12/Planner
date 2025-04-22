@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Table = ({ headers, data, dataToRow }) => {
+const Table = ({ headers, data }) => {
 
   return (
     <table class="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400 ">
@@ -13,7 +13,17 @@ const Table = ({ headers, data, dataToRow }) => {
           ))}
         </tr>
       </thead>
-      {data.map(dataToRow)}
+
+      {data.map(
+        (list) => (
+          <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+            {list.map((element) => (
+              <td class="px-6 py-4">
+                {element}
+              </td>))}
+          </tr>
+        ))
+      }
     </table>
   )
 }
