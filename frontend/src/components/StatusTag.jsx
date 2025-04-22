@@ -1,23 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const Tag = ({ label, color }) => (
-  <div class={"rounded " + color}>{label}</div>
-)
+const tagStyle = "rounded p-2"
+const tags = [
+  { label: "Not Started", color: "text-gray-400" },
+  { label: "Started", color: "text-yellow-400" },
+  { label: "Completed", color: "text-green-400" },
+  { label: "Blocked", color: "text-red-400" },
+]
 
 const StatusTag = ({ statusId }) => {
+
+  const [selectedOption, setSelectedOption] = useState(statusId);
+
+  const handleChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const selectStyle = tagStyle + " " + tags[selectedOption].color;
+
   return (
-    statusId < tags.length ? tags[statusId] : unknownTag(statusId)
+    <div className=''>
+      <select className={selectStyle} defaultValue={statusId} onChange={handleChange}>
+        {tags.map((tag, index) => (
+          <option value={index}>{tag.label}</option>
+        ))}
+      </select>
+    </div>
   )
 }
-
-
-const unknownTag = (statusId) => <Tag label={"Unkown (" + statusId + ")"} color={"text-red-400"} />
-
-const tags = [
-  <Tag label="Not Started" color={"text-gray-400"} />,
-  <Tag label="Started" color={"text-yellow-400"} />,
-  <Tag label="Completed" color={"text-green-400"} />,
-  <Tag label="Blocked" color={"text-red-400"} />,
-]
 
 export default StatusTag;
