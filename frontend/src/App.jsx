@@ -11,6 +11,7 @@ import Project from './pages/Project.jsx'
 import Goal from './pages/Goal.jsx'
 import Todo from './pages/Todo.jsx'
 
+
 function App() {
 
 
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path='/' element={< Index />} />
           <Route path='/register' element={<Register />} />
+          
           <Route path='/login' element={< Login />} />
           <Route path='/home' element={< Home />} />
           <Route path='/projects' element={< ProjectList />} />
