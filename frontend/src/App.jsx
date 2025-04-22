@@ -8,6 +8,7 @@ import Login from './pages/Login.jsx'
 import Home from './pages/Home.jsx'
 import ProjectList from './pages/ProjectList.jsx'
 import Project from './pages/Project.jsx'
+import Goal from './pages/Goal.jsx'
 import Todo from './pages/Todo.jsx'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path='/home' element={< Home />} />
           <Route path='/projects' element={< ProjectList />} />
           <Route path='/projects/:id' element={<Project />} />
+          <Route path='/goal/:id' element={<Goal />} />
           <Route path='/todo' element={< Todo />} />
 
         </Routes>
