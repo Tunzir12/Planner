@@ -25,8 +25,8 @@ const Home = () => {
   console.log(currentUser);
 
   return (
-    
     <div>
+      <Navbar />
       
       <div className="p-2 bg-blue-600">
       <button type='submit' onClick={handleSignOut}>

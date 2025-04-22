@@ -34,8 +34,8 @@ const Login = () => {
           <label className="block mb-2" >Email</label>
           <input className="w-full p-2 mb-6 border-b-2 outline-none " type="email" name="email" id="email" placeholder='Enter Email' value={email} onChange={(e) => setEmail(e.target.value)} /><br />
 
-          <label class="block mb-2" for="password">Password</label>
-          <input class="w-full p-2 mb-6 border-b-2 outline-none" type="password" name="" id="" placeholder='Enter Password' /><br />
+          <label className="block mb-2" >Password</label>
+          <input className="w-full p-2 mb-6 border-b-2 outline-none" type="password" name="password" id="password" placeholder='Enter Password' value={password} onChange={(e) => setPassword(e.target.value)} /><br />
 
           <button className="w-full bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 mb-6 rounded" type="submit"  >
             Log In </button>
