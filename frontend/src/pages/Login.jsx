@@ -15,7 +15,7 @@ const Login = () => {
           <input class="w-full p-2 mb-6 border-b-2 outline-none " type="email" name="" id="" placeholder='Enter Email' /><br />
 
           <label class="block mb-2" for="password">Password</label>
-          <input class="w-full p-2 mb-6 border-b-2 outline-none" type="pass" name="" id="" placeholder='Enter Password' /><br />
+          <input class="w-full p-2 mb-6 border-b-2 outline-none" type="password" name="" id="" placeholder='Enter Password' /><br />
 
           <input class="w-full bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 mb-6 rounded" type="submit" value="Login" />
 
