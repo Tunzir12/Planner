@@ -1,7 +1,7 @@
 
 import React from 'react'
 import Navbar from '../components/Navbar'
-import Calendar from '../components/calendar'
+import Calendar from '../components/Calendar'
 import { auth, signOut } from '../firebase'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../components/privateRoute'
@@ -27,14 +27,13 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      
       <div className="p-2 bg-blue-600">
-      <button type='submit' onClick={handleSignOut}>
-        Log out
-      </button>
-      <h1>Welcome </h1>{currentUser.currentUser.email}
+        <button type='submit' onClick={handleSignOut}>
+          Log out
+        </button>
+        <h1>Welcome </h1>{currentUser.currentUser.email}
       </div>
-      
+
       <Calendar />
 
     </div>
