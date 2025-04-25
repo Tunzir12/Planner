@@ -27,8 +27,8 @@ const Navbar = () => {
           </div>
           <div className="hidden sm:ml-6 sm:block">
             <div className="flex space-x-4">
-              {tabs.map((tab) => (
-                <Link to={tab.path} className={"rounded-md px-3 py-2 text-sm font-medium text-white " + (location.pathname == tab.path ? "bg-gray-900" : "")} aria-current="page">
+              {tabs.map((tab, index) => (
+                <Link key={index} to={tab.path} className={"rounded-md px-3 py-2 text-sm font-medium text-white " + (location.pathname == tab.path ? "bg-gray-900" : "")} aria-current="page">
                   {tab.name}
                 </Link>
               ))}
