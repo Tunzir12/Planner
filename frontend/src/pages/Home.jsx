@@ -9,7 +9,7 @@ import { useAuth } from '../components/routeComp/privateRoute'
 
 const Home = () => {
 
-  const currentUser = useAuth();
+  const userContext = useAuth();
 
   const goto = useNavigate();
   const handleSignOut = async () => {
@@ -22,19 +22,16 @@ const Home = () => {
     }
   };
 
-  console.log(currentUser);
-
   return (
     <div>
       <Navbar />
-      
       <div className="p-2 bg-blue-600">
-      <button type='submit' onClick={handleSignOut}>
-        Log out
-      </button>
-      <h1>Welcome </h1>{currentUser.currentUser.email}
+        <button type='submit' onClick={handleSignOut}>
+          Log out
+        </button>
+        <h1>Welcome {userContext.currentUser.displayName}</h1>
       </div>
-      
+
       <Calendar />
 
     </div>
