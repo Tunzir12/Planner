@@ -23,7 +23,7 @@ const DescriptionHeaders = [
 // Conversion functions
 const goalToList = (goal) => (
   [
-    <Link to={"/goal/0"} class="font-medium text-gray-900 whitespace-nowrap dark:text-white" >
+    <Link to={"/goal/0"} className="font-medium text-gray-900 whitespace-nowrap dark:text-white" >
       {goal.title}
     </Link>,
     goal.assigned,
@@ -51,10 +51,10 @@ const Project = () => {
   const goalList = project.goals.map(goalToList);
 
   return (
-    <div class="dark:bg-gray-900 min-h-screen h-full">
+    <div className="dark:bg-gray-900 min-h-screen h-full">
       <Navbar />
-      <div class="px-6 ">
-        <h1 class=" py-4 text-gray-900 dark:text-white text-2xl">
+      <div className="px-6 ">
+        <h1 className=" py-4 text-gray-900 dark:text-white text-2xl">
           {project.name}
         </h1>
         <DetailsList headers={DescriptionHeaders} data={descriptionList} />

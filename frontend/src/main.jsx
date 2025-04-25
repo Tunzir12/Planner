@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 
 import './index.css'
 import App from './App.jsx'
-import { AuthProvider } from './components/privateRoute.jsx'
+import { AuthProvider } from './components/routeComp/privateRoute.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -1,10 +1,10 @@
 
 import React from 'react'
 import Navbar from '../components/Navbar'
-import Calendar from '../components/calendar'
+import Calendar from '../components/Calendar'
 import { auth, signOut } from '../firebase'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../components/privateRoute'
+import { useAuth } from '../components/routeComp/privateRoute'
 
 
 const Home = () => {
