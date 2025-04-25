@@ -34,10 +34,10 @@ const Project = () => {
   const goalList = goalToList(goal);
 
   return (
-    <div class="dark:bg-gray-900 min-h-screen h-full">
+    <div className="dark:bg-gray-900 min-h-screen h-full">
       <Navbar />
-      <div class="px-6 ">
-        <h1 class=" py-4 text-gray-900 dark:text-white text-2xl">
+      <div className="px-6 ">
+        <h1 className=" py-4 text-gray-900 dark:text-white text-2xl">
           {goal.title}
         </h1>
         <DetailsList headers={GoalHeaders} data={goalList} />
