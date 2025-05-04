@@ -29,7 +29,7 @@ const Home = () => {
         <button type='submit' onClick={handleSignOut}>
           Log out
         </button>
-        <h1>Welcome {userContext.currentUser.displayName}</h1>
+        <h1>Welcome {userContext.currentUser.email}</h1>
       </div>
 
       <Calendar />
