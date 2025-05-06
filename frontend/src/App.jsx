@@ -22,18 +22,19 @@ function App() {
       <BrowserRouter>
         <Routes>
 
-          <Route element={<AuthRoute />}/>
+          <Route element={<AuthRoute />}>
           <Route path='/' element={< Index />} />
           <Route path='/register' element={<Register />} />
-
           <Route path='/login' element={< Login />} />
-          <Route path='/home' element={< Home />} />
-          <Route path='/projects' element={< ProjectList />} />
-          <Route path='/projects/:id' element={<Project />} />
-          <Route path='/goal/:id' element={<Goal />} />
-          <Route path='/todo' element={< Todo />} />
-          <Route path='/test' element={< Test />} />
-
+          </Route>
+          <Route element= {<SessionRoute/>}>
+            <Route path='/home' element={< Home />} />
+            <Route path='/projects' element={< ProjectList />} />
+            <Route path='/projects/:id' element={<Project />} />
+            <Route path='/goal/:id' element={<Goal />} />
+            <Route path='/todo' element={< Todo />} />
+            <Route path='/test' element={< Test />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </>
