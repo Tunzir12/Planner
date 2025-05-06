@@ -6,6 +6,7 @@ import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from '../firebase';
 
 async function getUsers() {
+
   const querySnapshot = await getDocs(collection(db, "users"));
 
   var users = querySnapshot.docs.map(doc => doc.data())
@@ -21,7 +22,7 @@ const UserList = () => {
   useEffect(() => {
     const getUserList = async () => {
       const userlist = await getUsers();
-      console.log(userlist)
+      console.log(userlist);
       setUser(userlist);
       setLoading(false);
     }

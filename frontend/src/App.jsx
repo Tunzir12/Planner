@@ -23,9 +23,9 @@ function App() {
         <Routes>
 
           <Route element={<AuthRoute />}>
-          <Route path='/' element={< Index />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/login' element={< Login />} />
+            <Route path='/' element={< Index />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/login' element={< Login />} />
           </Route>
           <Route element= {<SessionRoute/>}>
             <Route path='/home' element={< Home />} />
