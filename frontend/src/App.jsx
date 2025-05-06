@@ -1,33 +1,34 @@
 
 import './App.css'
 
-import { Route, Routes, BrowserRouter } from 'react-router-dom'
-import Index from './pages/Index.jsx'
-import Register from './pages/Register.jsx'
-import Login from './pages/Login.jsx'
-import Home from './pages/Home.jsx'
-import ProjectList from './pages/ProjectList.jsx'
-import Project from './pages/Project.jsx'
-import Goal from './pages/Goal.jsx'
-import Todo from './pages/Todo.jsx'
+// Components
 import AuthRoute from './components/routeComp/authRoute.jsx'
+import { Route, Routes, BrowserRouter } from 'react-router-dom'
 import SessionRoute from './components/routeComp/sessionRoute.jsx'
+
+// Pages
+import Goal from './pages/Goal.jsx'
+import Home from './pages/Home.jsx'
+import Index from './pages/Index.jsx'
+import Login from './pages/Login.jsx'
+import Project from './pages/Project.jsx'
+import ProjectList from './pages/ProjectList.jsx'
+import Register from './pages/Register.jsx'
 import Test from './pages/Test.jsx'
+import Todo from './pages/Todo.jsx'
 
 function App() {
-
 
   return (
     <>
       <BrowserRouter>
         <Routes>
-
           <Route element={<AuthRoute />}>
-          <Route path='/' element={< Index />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/login' element={< Login />} />
+            <Route path='/' element={< Index />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/login' element={< Login />} />
           </Route>
-          <Route element= {<SessionRoute/>}>
+          <Route element={<SessionRoute />}>
             <Route path='/home' element={< Home />} />
             <Route path='/projects' element={< ProjectList />} />
             <Route path='/projects/:id' element={<Project />} />
