@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import Table from '../components/Table'
 import { Link } from 'react-router-dom'
 
-import { getProjects } from '../util/Api.jsx'
+import { getProjects } from '../util/DummyApi.jsx'
 
 const HEADERS = [
   "Name", "Owner", "Milestones", "Deadline"

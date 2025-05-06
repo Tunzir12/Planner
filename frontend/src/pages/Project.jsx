@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar'
 import StatusTag from '../components/StatusTag'
 import Table from '../components/Table'
 
-import { getProject } from '../util/Api.jsx'
+import { getProject } from '../util/DummyApi.jsx'
 
 // Headers
 const GoalHeaders = [
