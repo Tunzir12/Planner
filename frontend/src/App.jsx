@@ -12,7 +12,7 @@ import Goal from './pages/Goal.jsx'
 import Todo from './pages/Todo.jsx'
 import AuthRoute from './components/routeComp/authRoute.jsx'
 import SessionRoute from './components/routeComp/sessionRoute.jsx'
-
+import Test from './pages/Test.jsx'
 
 function App() {
 
@@ -22,22 +22,17 @@ function App() {
       <BrowserRouter>
         <Routes>
 
-          <Route element={<AuthRoute />}>
+          <Route element={<AuthRoute />}/>
           <Route path='/' element={< Index />} />
+          <Route path='/register' element={<Register />} />
 
-            <Route path='/register' element={<Register />} />
-            
-            <Route path='/login' element={< Login />} />
-          </Route>
-
-          <Route element={<SessionRoute />}>
-            <Route path='/home' element={< Home />} />
-            <Route path='/projects' element={< ProjectList />} />
-            <Route path='/projects/:id' element={<Project />} />
-            <Route path='/goal/:id' element={<Goal />} />
-            <Route path='/todo' element={< Todo />} />
-          </Route>
-
+          <Route path='/login' element={< Login />} />
+          <Route path='/home' element={< Home />} />
+          <Route path='/projects' element={< ProjectList />} />
+          <Route path='/projects/:id' element={<Project />} />
+          <Route path='/goal/:id' element={<Goal />} />
+          <Route path='/todo' element={< Todo />} />
+          <Route path='/test' element={< Test />} />
 
         </Routes>
       </BrowserRouter>

@@ -14,7 +14,6 @@ const Navbar = () => {
 
   return (
 
-
     <nav className="bg-gray-800">
       <div className="max-w-screen-xl flex flex-wrap justify-between p-4">
         <Link to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
