@@ -10,6 +10,8 @@ import ProjectList from './pages/ProjectList.jsx'
 import Project from './pages/Project.jsx'
 import Goal from './pages/Goal.jsx'
 import Todo from './pages/Todo.jsx'
+import AuthRoute from './components/routeComp/authRoute.jsx'
+import SessionRoute from './components/routeComp/sessionRoute.jsx'
 import Test from './pages/Test.jsx'
 
 function App() {
@@ -19,6 +21,8 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
+
+          <Route element={<AuthRoute />}/>
           <Route path='/' element={< Index />} />
           <Route path='/register' element={<Register />} />
 

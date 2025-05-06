@@ -243,7 +243,6 @@ const Calendar = () => {
 function renderEventContent(eventInfo) {
     return (
         <>
-            
             <i>{eventInfo.event.title}</i>
         </>
     )
