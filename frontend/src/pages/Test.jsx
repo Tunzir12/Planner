@@ -19,15 +19,9 @@ const UserList = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getUserList = async () => {
-      const userlist = await getUsers();
-      console.log(userlist)
-      setUser(userlist);
-      setLoading(false);
+    if (!users) {
+      getUsers().then(setUser).then(() => setLoading(false))
     }
-
-    if (!users)
-      getUserList();
   }, [])
 
 
