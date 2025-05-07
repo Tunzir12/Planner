@@ -104,6 +104,57 @@ const getGoal = (id) => {
   return goals[id]
 }
 
-export { getProjects, getProject, getGoal }
+const event = [
+  {
+    title: "Team Meeting",
+    description: "Weekly project sync with the team.",
+    startTime: "09:00",
+    startDate: "2025-04-10",
+    endTime: "10:30",
+    endDate: "2025-05-10",
+    allDay: false,
+  },
+  {
+    title : "Doctor's appointment",
+    description: "yearly checkup with doctor",
+    startTime: "14:00",
+    startDate: "2025-05-29",
+    endTime: "17:00",
+    endDate:"2025-05-29",
+    allDay: false,
+  },
+  {
+    title : "Some workshop",
+    description: "",
+    startTime: "",
+    startDate: "2025-05-11",
+    endTime: "",
+    endDate:"2025-05-15",
+    allDay: true,
+  },
+]
+
+const todo = [
+  {
+    title:"buy groceries",
+    dueDate:"2025-05-07",
+    status:"Not completed",
+  },
+  {
+    title:"complete homework",
+    dueDate:"2025-05-10",
+    status:"Not completed",
+  },
+  {
+    title:"plant waters",
+    dueDate:"2025-05-01",
+    status:"Completed",
+  },
+]
+
+const getTodo = () => { return todo}
+const getEvent = () => { return event}
+
+export { getProjects, getProject, getGoal, getTodo, getEvent }
 
 
