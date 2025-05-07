@@ -155,6 +155,19 @@ const todo = [
 const getTodo = () => { return todo}
 const getEvent = () => { return event}
 
-export { getProjects, getProject, getGoal, getTodo, getEvent }
+const getName = async (id) => {
+  return "Ronalds"
+}
+
+const API = {
+  getProjects: getProjects,
+  getProject: getProject,
+  getGoal: getGoal,
+  getName: getName,
+  getTodo: getTodo,
+  getEvent: getEvent
+}
 
 
+// export { getProjects, getProject, getGoal, getTodo, getEvent }
+export default API

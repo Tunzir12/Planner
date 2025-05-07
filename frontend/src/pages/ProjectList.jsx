@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar'
 import Table from '../components/Table'
 import { Link } from 'react-router-dom'
 
-import { getProjects } from '../util/DummyApi.jsx'
+import API from '../util/Api.jsx'
 
 const HEADERS = [
   "Name", "Owner", "Milestones", "Deadline"
@@ -25,7 +25,7 @@ const projectToList = (pr) => (
 
 const ProjectList = () => {
 
-  var projects = getProjects();
+  var projects = API.getProjects();
 
   var list = projects.map(projectToList);
 

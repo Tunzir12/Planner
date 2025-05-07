@@ -20,9 +20,7 @@ const UserList = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!users) {
-      getUsers().then(setUser).then(() => setLoading(false))
-    }
+    getUsers().then(setUser).then(() => setLoading(false))
   }, [])
 
 
