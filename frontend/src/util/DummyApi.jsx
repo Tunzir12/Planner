@@ -104,6 +104,16 @@ const getGoal = (id) => {
   return goals[id]
 }
 
-export { getProjects, getProject, getGoal }
+const getName = async (id) => {
+  return "Ronalds"
+}
 
+const API = {
+  getProjects: getProjects,
+  getProject: getProject,
+  getGoal: getGoal,
+  getName: getName,
+}
 
+// export { getProjects, getProject, getGoal }
+export default API

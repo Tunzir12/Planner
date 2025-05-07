@@ -7,7 +7,7 @@ import Navbar from '../components/Navbar'
 import StatusTag from '../components/StatusTag'
 import Table from '../components/Table'
 
-import { getGoal } from '../util/DummyApi.jsx'
+import API from '../util/Api.jsx'
 
 // Headers
 const GoalHeaders = [
@@ -29,7 +29,7 @@ const Project = () => {
 
   const { id } = useParams();
 
-  const goal = getGoal(id);
+  const goal = API.getGoal(id);
 
   const goalList = goalToList(goal);
 
