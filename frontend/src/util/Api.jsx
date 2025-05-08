@@ -1,13 +1,64 @@
 import DummyAPI from './DummyApi.jsx'
 
-const getProjects = () => { }
-const getProject = (id) => { }
+import { useEffect, useState } from 'react'
+
+import { db } from '../firebase';
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
+
+
+const asyncDataWrapper = (asyncFunction) => {
+  const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await asyncFunction();
+        setData(result);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [asyncFunction]);
+
+  return { data, loading, error };
+}
+
+const getProjects = () => {
+
+  const inner = async () => {
+
+    const querySnapshot = await getDocs(collection(db, "projects"));
+
+    var projects = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    return projects
+  }
+
+  return asyncDataWrapper(inner)
+}
+
+const getProject = (id) => {
+}
+
 const getGoal = (id) => {
   return goals[id]
 }
 
 const API = {
-  getProjects: DummyAPI.getProjects,
+  getProjects: getProjects,
   getProject: DummyAPI.getProject,
   getGoal: DummyAPI.getGoal,
   getTodo: DummyAPI.getTodo,
