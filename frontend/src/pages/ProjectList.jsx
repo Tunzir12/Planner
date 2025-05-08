@@ -25,7 +25,7 @@ const projectToList = (pr) => (
 
 const ProjectList = () => {
 
-  var projects = API.getProjects();
+  const { data: projects, loading, error } = API.getProjects();
 
   var list = projects.map(projectToList);
 

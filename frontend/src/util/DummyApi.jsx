@@ -85,7 +85,9 @@ const goals =
     },
   ]
 
-const getProjects = () => { return projects }
+
+
+const getProjects = () => { return { data: projects, loading: false, error: null } }
 const getProject = (id) => {
 
 
@@ -96,12 +98,11 @@ const getProject = (id) => {
   ));
   project.goals = goalIds.map((relation) => (goals[relation.goal]))
 
-  return project
-
+  return { data: project, loading: false, error: null }
 }
 
 const getGoal = (id) => {
-  return goals[id]
+  return { data: goals[id], loading: false, error: null }
 }
 
 const event = [
@@ -115,59 +116,53 @@ const event = [
     allDay: false,
   },
   {
-    title : "Doctor's appointment",
+    title: "Doctor's appointment",
     description: "yearly checkup with doctor",
     startTime: "14:00",
     startDate: "2025-05-29",
     endTime: "17:00",
-    endDate:"2025-05-29",
+    endDate: "2025-05-29",
     allDay: false,
   },
   {
-    title : "Some workshop",
+    title: "Some workshop",
     description: "",
     startTime: "",
     startDate: "2025-05-11",
     endTime: "",
-    endDate:"2025-05-15",
+    endDate: "2025-05-15",
     allDay: true,
   },
 ]
 
 const todo = [
   {
-    title:"buy groceries",
-    dueDate:"2025-05-07",
-    status:"Not completed",
+    title: "buy groceries",
+    dueDate: "2025-05-07",
+    status: "Not completed",
   },
   {
-    title:"complete homework",
-    dueDate:"2025-05-10",
-    status:"Not completed",
+    title: "complete homework",
+    dueDate: "2025-05-10",
+    status: "Not completed",
   },
   {
-    title:"plant waters",
-    dueDate:"2025-05-01",
-    status:"Completed",
+    title: "plant waters",
+    dueDate: "2025-05-01",
+    status: "Completed",
   },
 ]
 
-const getTodo = () => { return todo}
-const getEvent = () => { return event}
+const getTodo = () => { return todo }
+const getEvent = () => { return event }
 
-const getName = async (id) => {
-  return "Ronalds"
-}
 
 const API = {
   getProjects: getProjects,
   getProject: getProject,
   getGoal: getGoal,
-  getName: getName,
   getTodo: getTodo,
   getEvent: getEvent
 }
 
-
-// export { getProjects, getProject, getGoal, getTodo, getEvent }
 export default API

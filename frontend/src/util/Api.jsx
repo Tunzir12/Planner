@@ -10,7 +10,8 @@ const API = {
   getProjects: DummyAPI.getProjects,
   getProject: DummyAPI.getProject,
   getGoal: DummyAPI.getGoal,
-  getName: DummyAPI.getName,
+  getTodo: DummyAPI.getTodo,
+  getEvent: DummyAPI.getEvent
 }
 
 export default API 
