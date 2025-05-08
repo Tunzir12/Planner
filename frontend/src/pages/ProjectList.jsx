@@ -17,15 +17,29 @@ const projectToList = (pr) => (
 
     pr.owner,
 
-    pr.milestones.completed + " / " + pr.milestones.total,
+    pr.milestonesCompleted + " / " + pr.milestonesTotal,
 
-    pr.deadline,
+    pr.deadline.toDate().toDateString(),
   ]
 )
 
 const ProjectList = () => {
 
-  var projects = API.getProjects();
+  const { data: projects, loading, error } = API.getProjects();
+
+
+  if (loading)
+    return (
+      <div className="dark:bg-gray-900 min-h-screen h-full">
+        <Navbar />
+        <div className="px-6 ">
+          Loading...
+        </div>
+      </div >
+    )
+
+  // console.log(projects)
+
 
   var list = projects.map(projectToList);
 

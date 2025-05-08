@@ -45,7 +45,15 @@ const Project = () => {
 
   const { id } = useParams();
 
-  var project = API.getProject(id);
+  var { data: project, loading, error } = API.getProject(id);
+
+  if (error) {
+    return (<div>error</div>)
+  }
+
+  if (loading)
+    return (<div>loading</div>)
+
 
   const descriptionList = projectToDescriptionList(project);
   const goalList = project.goals.map(goalToList);

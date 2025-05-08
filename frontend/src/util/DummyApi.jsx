@@ -85,7 +85,9 @@ const goals =
     },
   ]
 
-const getProjects = () => { return projects }
+
+
+const getProjects = () => { return { data: projects, loading: false, error: null } }
 const getProject = (id) => {
 
 
@@ -96,12 +98,11 @@ const getProject = (id) => {
   ));
   project.goals = goalIds.map((relation) => (goals[relation.goal]))
 
-  return project
-
+  return { data: project, loading: false, error: null }
 }
 
 const getGoal = (id) => {
-  return goals[id]
+  return { data: goals[id], loading: false, error: null }
 }
 
 const events = [
@@ -136,19 +137,19 @@ const events = [
 
 const todo = [
   {
-    title:"buy groceries",
-    dueDate:"2025-05-07",
-    status:"Not completed",
+    title: "buy groceries",
+    dueDate: "2025-05-07",
+    status: "Not completed",
   },
   {
-    title:"complete homework",
-    dueDate:"2025-05-10",
-    status:"Not completed",
+    title: "complete homework",
+    dueDate: "2025-05-10",
+    status: "Not completed",
   },
   {
-    title:"plant waters",
-    dueDate:"2025-05-01",
-    status:"Completed",
+    title: "plant waters",
+    dueDate: "2025-05-01",
+    status: "Completed",
   },
 ]
 
@@ -163,11 +164,8 @@ const API = {
   getProjects: getProjects,
   getProject: getProject,
   getGoal: getGoal,
-  getName: getName,
   getTodo: getTodo,
   getEvents: getEvents
 }
 
-
-// export { getProjects, getProject, getGoal, getTodo, getEvent }
 export default API
