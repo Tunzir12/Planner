@@ -104,33 +104,33 @@ const getGoal = (id) => {
   return goals[id]
 }
 
-const event = [
+const events = [
   {
     title: "Team Meeting",
     description: "Weekly project sync with the team.",
-    startTime: "09:00",
-    startDate: "2025-04-10",
-    endTime: "10:30",
-    endDate: "2025-05-10",
+    start: "2025-05-08T09:00:00",
+    end: "2025-05-09T10:30:00",
     allDay: false,
+    textColor: "#e5e508",
+    backgroundColor: "#cc2bf3",
   },
   {
-    title : "Doctor's appointment",
-    description: "yearly checkup with doctor",
-    startTime: "14:00",
-    startDate: "2025-05-29",
-    endTime: "17:00",
-    endDate:"2025-05-29",
-    allDay: false,
-  },
-  {
-    title : "Some workshop",
-    description: "",
-    startTime: "",
-    startDate: "2025-05-11",
-    endTime: "",
-    endDate:"2025-05-15",
+    title: "coursework meeting",
+    description: "Weekly project sync with the team.",
+    start: "2025-05-10",
+    end: "2025-05-10",
     allDay: true,
+    textColor: "#e5e508",
+    backgroundColor: "#cc2bf3",
+  },
+  {
+    title: 'BCH237',
+    start: '2025-05-12T10:30:00',
+    end: '2025-05-12T11:30:00',
+    extendedProps: {
+      department: 'BioChemistry'
+    },
+    description: 'Lecture',
   },
 ]
 
@@ -153,7 +153,7 @@ const todo = [
 ]
 
 const getTodo = () => { return todo}
-const getEvent = () => { return event}
+const getEvents = () => { return events}
 
 const getName = async (id) => {
   return "Ronalds"
@@ -165,7 +165,7 @@ const API = {
   getGoal: getGoal,
   getName: getName,
   getTodo: getTodo,
-  getEvent: getEvent
+  getEvents: getEvents
 }
 
 

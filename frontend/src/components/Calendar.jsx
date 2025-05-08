@@ -3,19 +3,38 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction"
 import timeGridPlugin from '@fullcalendar/timegrid'
 import multiMonthPlugin from '@fullcalendar/multimonth'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
+import API from '../util/Api'
 
 const Calendar = () => {
 
-    const [isOpen, setIsOpen] = useState(false)
-    const [newEvent, setNewEvent] = useState({
-        title: '',
-        start: '',
-        end: '',
-        allDay: false
-    })
+    const [isOpen, setIsOpen] = useState(false)  
+
+    const [events, setEvents] = useState([
+        {
+            title: '',
+            description: '',
+            start: '',
+            end: '',
+            allDay: '',
+            backgroundColor: ''
+        }
+    ]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+                try{
+                    const eventData = await API.getEvents()
+                    setEvents(eventData);}
+                catch(error){
+                    console.error("Error fetching events: ", error);
+                }
+            };
+            fetchData();
+    }, []);
+
     
     const calendarRef = useRef(null)
 
@@ -33,29 +52,33 @@ const Calendar = () => {
         const endDate = new Date(startDate)
         endDate.setHours(startDate.getHours() + 1) // Default to 1 hour duration
         
-        setNewEvent({
+        setEvents({
             title: '',
+            description: '',
             start: startDate,
             end: endDate,
-            allDay: arg.allDay
+            allDay: arg.allDay,
+            backgroundColor: ''
         })
         
         openModal()
     }
 
     const handleSelect = (selectInfo) => {
-        setNewEvent({
+        setEvents({
             title: '',
+            description: '',
             start: selectInfo.start,
             end: selectInfo.end,
-            allDay: selectInfo.allDay
+            allDay: selectInfo.allDay,
+            backgroundColor: selectInfo.color
         })
         openModal()
     }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
-        setNewEvent(prev => ({
+        setEvents(prev => ({
             ...prev,
             [name]: value
         }))
@@ -65,7 +88,7 @@ const Calendar = () => {
         const { name, value } = e.target
         const time = value.split(':')
         
-        setNewEvent(prev => {
+        setEvents(prev => {
             const newDate = new Date(prev[name])
             newDate.setHours(parseInt(time[0]))
             newDate.setMinutes(parseInt(time[1]))
@@ -83,10 +106,10 @@ const Calendar = () => {
         
         calendarApi.addEvent({
             id: Date.now().toString(),
-            title: newEvent.title,
-            start: newEvent.start,
-            end: newEvent.end,
-            allDay: newEvent.allDay
+            title: events.title,
+            start: events.start,
+            end: events.end,
+            allDay: events.allDay
         })
         
         closeModal()
@@ -108,9 +131,10 @@ const Calendar = () => {
                     }}
                     initialView='dayGridMonth'
                     weekends={true}
-                    events={newEvent}
+                    events={events}
                     eventContent={renderEventContent}
                     editable={true}
+                    eventOverlap={true}
                     selectable={true}
                     selectMirror={true}
                     dateClick={handleDateClick}
@@ -163,7 +187,21 @@ const Calendar = () => {
                                                 name="title"
                                                 id="title"
                                                 required
-                                                value={newEvent.title}
+                                                value={events.title}
+                                                onChange={handleInputChange}
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                                                Event Description
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="description"
+                                                id="description"
+                                                required
+                                                value={event.title}
                                                 onChange={handleInputChange}
                                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                             />
@@ -179,7 +217,7 @@ const Calendar = () => {
                                                     name="start"
                                                     id="start-time"
                                                     required
-                                                    value={newEvent.start ? newEvent.start.toTimeString().substring(0, 5) : ''}
+                                                    value={events.start ? events.start.toTimeString().substring(0, 5) : ''}
                                                     onChange={handleTimeChange}
                                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                 />
@@ -193,7 +231,7 @@ const Calendar = () => {
                                                     name="end"
                                                     id="end-time"
                                                     required
-                                                    value={newEvent.end ? newEvent.end.toTimeString().substring(0, 5) : ''}
+                                                    value={events.end ? events.end.toTimeString().substring(0, 5) : ''}
                                                     onChange={handleTimeChange}
                                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                                 />
@@ -205,8 +243,8 @@ const Calendar = () => {
                                                 type="checkbox"
                                                 name="allDay"
                                                 id="allDay"
-                                                checked={newEvent.allDay}
-                                                onChange={(e) => setNewEvent(prev => ({...prev, allDay: e.target.checked}))}
+                                                checked={events.allDay}
+                                                onChange={(e) => setEvents(prev => ({...prev, allDay: e.target.checked}))}
                                                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                             />
                                             <label htmlFor="allDay" className="ml-2 block text-sm text-gray-700">
@@ -243,7 +281,15 @@ const Calendar = () => {
 function renderEventContent(eventInfo) {
     return (
         <>
-            <i>{eventInfo.event.title}</i>
+            <div className="p-1">
+                <b>{eventInfo.event.title}</b>
+                {eventInfo.event.extendedProps?.description && (
+                    <p className="text-xs">{eventInfo.event.extendedProps.description}</p>
+                )}
+                {!eventInfo.event.allDay && (
+                    <p className="text-xs">{eventInfo.timeText}</p>
+                )}
+            </div>
         </>
     )
 }
