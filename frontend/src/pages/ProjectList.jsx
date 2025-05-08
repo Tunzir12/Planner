@@ -1,6 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import Table from '../components/Table'
+import User from '../components/User'
 import { Link } from 'react-router-dom'
 
 import API from '../util/Api.jsx'
@@ -15,7 +16,7 @@ const projectToList = (pr) => (
       {pr.name}
     </Link>,
 
-    pr.owner,
+    <User userId={pr.owner} />,
 
     pr.milestonesCompleted + " / " + pr.milestonesTotal,
 

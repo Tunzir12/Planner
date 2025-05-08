@@ -50,6 +50,20 @@ const getProjects = () => {
   return asyncDataWrapper(inner)
 }
 
+const getUser = (userId) => {
+  const inner = async () => {
+
+    const querySnapshot = await getDocs(collection(db, "users"), userId);
+
+    const doc = querySnapshot.docs[0];
+    const user = ({ id: doc.id, ...doc.data() })
+
+    return user
+  }
+
+  return asyncDataWrapper(inner)
+}
+
 const getProject = (id) => {
 }
 
@@ -59,6 +73,7 @@ const getGoal = (id) => {
 
 const API = {
   getProjects: getProjects,
+  getUser: getUser,
   getProject: DummyAPI.getProject,
   getGoal: DummyAPI.getGoal,
   getTodo: DummyAPI.getTodo,
