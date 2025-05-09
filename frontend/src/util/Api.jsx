@@ -42,7 +42,8 @@ const getProjects = () => {
 
     const querySnapshot = await getDocs(collection(db, "projects"));
 
-    var projects = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    var projects = querySnapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
 
     return projects
   }
@@ -64,7 +65,18 @@ const getUser = (userId) => {
   return asyncDataWrapper(inner)
 }
 
-const getProject = (id) => {
+const getProject = (projectId) => {
+
+  const inner = async () => {
+
+    const querySnapshot = await getDocs(collection(db, "projects"), projectId);
+    const doc = querySnapshot.docs[0];
+    const project = ({ id: doc.id, ...doc.data() })
+
+    return project
+  }
+
+  return asyncDataWrapper(inner)
 }
 
 const getGoal = (id) => {
@@ -74,7 +86,7 @@ const getGoal = (id) => {
 const API = {
   getProjects: getProjects,
   getUser: getUser,
-  getProject: DummyAPI.getProject,
+  getProject: getProject,
   getGoal: DummyAPI.getGoal,
   getTodo: DummyAPI.getTodo,
   getEvent: DummyAPI.getEvent

@@ -35,8 +35,8 @@ const goalToList = (goal) => (
 const projectToDescriptionList = (project) => (
   [
     project.owner,
-    project.milestones.total + " / " + project.milestones.total,
-    project.deadline
+    project.milestonesCompleted + " / " + project.milestonesTotal,
+    project.deadline.toDate().toDateString(),
   ]
 )
 
@@ -56,7 +56,7 @@ const Project = () => {
 
 
   const descriptionList = projectToDescriptionList(project);
-  const goalList = project.goals.map(goalToList);
+  // const goalList = project.goals.map(goalToList);
 
   return (
     <div className="dark:bg-gray-900 min-h-screen h-full">
@@ -67,7 +67,7 @@ const Project = () => {
         </h1>
         <DetailsList headers={DescriptionHeaders} data={descriptionList} />
         <Divider title="Goals" />
-        <Table headers={GoalHeaders} data={goalList} />
+        {/* <Table headers={GoalHeaders} data={goalList} /> */}
       </div>
     </div >
   )
