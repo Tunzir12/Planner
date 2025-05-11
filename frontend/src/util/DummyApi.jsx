@@ -156,9 +156,6 @@ const todo = [
 const getTodo = () => { return todo}
 const getEvents = () => { return events}
 
-const getName = async (id) => {
-  return "Ronalds"
-}
 
 const API = {
   getProjects: getProjects,
