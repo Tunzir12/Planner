@@ -16,7 +16,7 @@ const projectToList = (pr) => (
       {pr.name}
     </Link>,
 
-    <User userId={pr.owner} />,
+    <User user={pr.owner} />,
 
     pr.milestonesCompleted + " / " + pr.milestonesTotal,
 
@@ -39,10 +39,13 @@ const ProjectList = () => {
       </div >
     )
 
-  // console.log(projects)
+  if (error) {
+    console.log(error)
+    return (<div>Error</div>)
+  }
 
 
-  var list = projects.map(projectToList);
+  const list = projects.map(projectToList);
 
   return (
     <div className="dark:bg-gray-900 min-h-screen h-full">

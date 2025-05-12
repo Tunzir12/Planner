@@ -45,6 +45,18 @@ const getProjects = () => {
     var projects = querySnapshot.docs
       .map(doc => ({ id: doc.id, ...doc.data() }))
 
+    const usersRef = collection(db, 'users')
+
+    const ownerIds = projects.map(doc => doc.owner)
+    const ownersSnapshot = await getDocs(usersRef, ownerIds)
+
+    var owners = []
+    ownersSnapshot.docs.forEach(doc => {
+      owners[doc.id] = ({ id: doc.id, ...doc.data() })
+    })
+
+    projects = projects.map(doc => ({ ...doc, owner: owners[doc.owner] }))
+
     return projects
   }
 
