@@ -6,7 +6,7 @@ import multiMonthPlugin from '@fullcalendar/multimonth'
 import { useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
-import API from '../util/Api'
+import API from '../util/DummyApi' // for testing purpose using dummyapi
 
 const Calendar = () => {
 
@@ -116,31 +116,39 @@ const Calendar = () => {
     }
 
     return (
-        <div className='grid grid-cols-5 h-screen max-w-screen'>
-          <div className="col-span-1">
-
-          </div>
-            <div className=" col-span-4 pl-30 pr-30 pt-0">
-                <FullCalendar
-                    ref={calendarRef}
-                    plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, multiMonthPlugin]}
-                    headerToolbar={{
-                        start: 'prev,next',
-                        center: 'title',
-                        end: 'dayGridMonth,timeGridWeek,timeGridDay multiMonthYear'
-                    }}
-                    initialView='dayGridMonth'
-                    weekends={true}
-                    events={events}
-                    eventContent={renderEventContent}
-                    editable={true}
-                    eventOverlap={true}
-                    selectable={true}
-                    selectMirror={true}
-                    dateClick={handleDateClick}
-                    select={handleSelect}
-                    multiMonthMaxColumns={3}
-                />
+        <div className='flex flex-col h-screen max-w-screen dark:bg-gray-900'>
+            <div className="flex-1 overflow-hidden text-white"> {/* Changed to flex layout */}
+                <div className="h-full p-4"> {/* Added padding and full height */}
+                    <FullCalendar
+                        ref={calendarRef}
+                        plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, multiMonthPlugin]}
+                        headerToolbar={{
+                            start: 'prev,next today',
+                            center: 'title',
+                            end: 'dayGridMonth,timeGridWeek,timeGridDay,multiMonthYear'
+                        }}
+                        initialView='dayGridMonth'
+                        weekends={true}
+                        events={events}
+                        eventContent={renderEventContent}
+                        editable={true}
+                        selectable={true}
+                        dateClick={handleDateClick}
+                        select={handleSelect}
+                        height="100%" // Make calendar fill container
+                        contentHeight="auto" // Auto-adjust content
+                        aspectRatio={1.5} // Adjust this value to control calendar proportions
+                        dayMaxEventRows={3} // Limit event rows per day
+                        views={{
+                            dayGridMonth: {
+                                dayMaxEventRows: 3 // Show more events in month view
+                            },
+                            timeGridWeek: {
+                                dayHeaderFormat: { weekday: 'short', day: 'numeric' }
+                            }
+                        }}
+                    />
+                </div>
             </div>
 
             {/* Event Modal */}
