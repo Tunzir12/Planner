@@ -2,7 +2,6 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction"
 import timeGridPlugin from '@fullcalendar/timegrid'
-import multiMonthPlugin from '@fullcalendar/multimonth'
 import { useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment } from 'react'
@@ -121,11 +120,11 @@ const Calendar = () => {
                 <div className="h-full p-4"> {/* Added padding and full height */}
                     <FullCalendar
                         ref={calendarRef}
-                        plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, multiMonthPlugin]}
+                        plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
                         headerToolbar={{
                             start: 'prev,next today',
-                            center: 'title',
-                            end: 'dayGridMonth,timeGridWeek,timeGridDay,multiMonthYear'
+                            center: 'dayGridMonth,timeGridWeek,timeGridDay' ,
+                            end: 'title'
                         }}
                         initialView='dayGridMonth'
                         weekends={true}
@@ -135,9 +134,10 @@ const Calendar = () => {
                         selectable={true}
                         dateClick={handleDateClick}
                         select={handleSelect}
+                        selectOverlap={true}
                         height="100%" // Make calendar fill container
                         contentHeight="auto" // Auto-adjust content
-                        aspectRatio={1.5} // Adjust this value to control calendar proportions
+                        aspectRatio={1.35} // Adjust this value to control calendar proportions
                         dayMaxEventRows={3} // Limit event rows per day
                         views={{
                             dayGridMonth: {
@@ -145,7 +145,7 @@ const Calendar = () => {
                             },
                             timeGridWeek: {
                                 dayHeaderFormat: { weekday: 'short', day: 'numeric' }
-                            }
+                            },
                         }}
                     />
                 </div>
@@ -208,7 +208,6 @@ const Calendar = () => {
                                                 type="text"
                                                 name="description"
                                                 id="description"
-                                                required
                                                 value={event.title}
                                                 onChange={handleInputChange}
                                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
