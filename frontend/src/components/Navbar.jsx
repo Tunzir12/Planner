@@ -1,10 +1,22 @@
-
+import { auth, signOut } from '../firebase'
+import { useNavigate } from 'react-router-dom'
 import { Link, useLocation } from 'react-router-dom'
 import logo from '../assets/logo_color.svg'
 
 const Navbar = () => {
 
   const location = useLocation();
+
+  const goto = useNavigate();
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      console.log('User signed out!');
+      goto('/');
+    } catch (error) {
+      console.error('Error signing out:', error.message);
+    }
+  };
 
   const tabs = [
     { name: 'Home', path: '/home' },
@@ -34,6 +46,11 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+              <button type='submit' onClick={handleSignOut} className='rounded-md text-sm font-medium text-white'>
+                Log out
+              </button>
+            </div>
       </div>
     </nav >
   )
