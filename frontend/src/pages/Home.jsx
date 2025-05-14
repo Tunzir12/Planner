@@ -12,8 +12,8 @@ const Home = () => {
   return (
     <div>
       <Navbar />
-      <div className="p-2 bg-purple-900">
-        <h1>Welcome {userContext.currentUser.displayName}</h1>
+      <div className="p-2 bg-cyan-800">
+        <h1 className='text-3xl text-white'>Welcome {userContext.currentUser.displayName}</h1>
       </div>
       <Calendar />
 
