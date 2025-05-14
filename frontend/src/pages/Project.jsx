@@ -28,7 +28,7 @@ const goalToList = (goal) => (
     </Link>,
     goal.assigned,
     <StatusTag statusId={goal.status} />,
-    goal.deadline
+    goal.deadline.toDate().toDateString()
   ]
 )
 
@@ -45,18 +45,18 @@ const Project = () => {
 
   const { id } = useParams();
 
-  var { data: project, loading, error } = API.getProject(id);
+  var { data: project, loading: loadingProject, error } = API.getProject(id);
+  var { data: goals, loading: loadingGoals } = API.getGoalsFromProjectId(id)
 
   if (error) {
     return (<div>error</div>)
   }
 
-  if (loading)
+  if (loadingProject || loadingGoals)
     return (<div>loading</div>)
 
-
   const descriptionList = projectToDescriptionList(project);
-  // const goalList = project.goals.map(goalToList);
+  const goalList = goals.map(goalToList)
 
   return (
     <div className="dark:bg-gray-900 min-h-screen h-full">
@@ -67,7 +67,7 @@ const Project = () => {
         </h1>
         <DetailsList headers={DescriptionHeaders} data={descriptionList} />
         <Divider title="Goals" />
-        {/* <Table headers={GoalHeaders} data={goalList} /> */}
+        <Table headers={GoalHeaders} data={goalList} />
       </div>
     </div >
   )

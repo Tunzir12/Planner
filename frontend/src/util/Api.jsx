@@ -91,8 +91,30 @@ const getProject = (projectId) => {
   return asyncDataWrapper(inner)
 }
 
-const getGoal = (id) => {
-  return goals[id]
+const getGoalsFromProjectId = (projectId) => {
+
+  const inner = async () => {
+    const querySnapshot = await getDocs(collection(db, "goals"));
+    const goals = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    return goals
+  }
+
+  return asyncDataWrapper(inner)
+}
+
+const getGoal = (goalId) => {
+
+  const inner = async () => {
+
+    const querySnapshot = await getDocs(collection(db, "goals"), goalId);
+    const doc = querySnapshot.docs[0];
+    const goal = ({ id: doc.id, ...doc.data() })
+
+    return goal
+  }
+
+  return asyncDataWrapper(inner)
 }
 
 const API = {
@@ -101,6 +123,7 @@ const API = {
   getProject: getProject,
   getGoal: DummyAPI.getGoal,
   getTodo: DummyAPI.getTodo,
+  getGoalsFromProjectId: getGoalsFromProjectId,
   getEvent: DummyAPI.getEvent
 }
 
