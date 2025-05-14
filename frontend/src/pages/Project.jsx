@@ -6,6 +6,7 @@ import Divider from '../components/Divider'
 import Navbar from '../components/Navbar'
 import StatusTag from '../components/StatusTag'
 import Table from '../components/Table'
+import Loading from '../components/Loading'
 
 import API from '../util/Api.jsx'
 
@@ -16,7 +17,7 @@ const GoalHeaders = [
 
 const DescriptionHeaders = [
   "Owner",
-  "Milestones",
+  "Goals",
   "Project Deadline",
 ]
 
@@ -34,7 +35,7 @@ const goalToList = (goal) => (
 
 const projectToDescriptionList = (project) => (
   [
-    project.owner,
+    project.owner.DisplayName,
     project.milestonesCompleted + " / " + project.milestonesTotal,
     project.deadline.toDate().toDateString(),
   ]
@@ -53,7 +54,13 @@ const Project = () => {
   }
 
   if (loadingProject || loadingGoals)
-    return (<div>loading</div>)
+    return (
+      <div>
+        <Navbar />
+        <Loading></Loading>
+      </div>
+    )
+
 
   const descriptionList = projectToDescriptionList(project);
   const goalList = goals.map(goalToList)

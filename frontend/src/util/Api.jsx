@@ -83,8 +83,12 @@ const getProject = (projectId) => {
 
     const querySnapshot = await getDocs(collection(db, "projects"), projectId);
     const doc = querySnapshot.docs[0];
-    const project = ({ id: doc.id, ...doc.data() })
+    var project = ({ id: doc.id, ...doc.data() })
 
+    const ownersSnapshot = await getDocs(collection(db, "users"), project.owner)
+
+    const ownerdoc = ownersSnapshot.docs[0];
+    project.owner = ({ id: ownerdoc.id, ...ownerdoc.data() })
     return project
   }
 

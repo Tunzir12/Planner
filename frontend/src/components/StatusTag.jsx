@@ -8,6 +8,9 @@ const tags = [
   { label: "Blocked", color: "text-red-400" },
 ]
 
+
+const unkownTag = { label: "Unkown", color: "text-red-400" }
+
 const StatusTag = ({ statusId, changeable = true }) => {
 
   const [selectedOption, setSelectedOption] = useState(statusId);
@@ -15,6 +18,9 @@ const StatusTag = ({ statusId, changeable = true }) => {
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
+
+  if (statusId >= tags.length)
+    return (<div className={tagstyle + unkownTag.color}>{unkownTag.label}</div>)
 
   const selectStyle = tagStyle + " " + tags[selectedOption].color;
 
