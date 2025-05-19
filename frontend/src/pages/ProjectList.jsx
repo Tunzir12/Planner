@@ -2,6 +2,7 @@ import React from 'react'
 import Navbar from '../components/Navbar'
 import Table from '../components/Table'
 import User from '../components/User'
+import Loading from '../components/Loading'
 import { Link } from 'react-router-dom'
 
 import API from '../util/Api.jsx'
@@ -33,9 +34,7 @@ const ProjectList = () => {
     return (
       <div className="dark:bg-gray-900 min-h-screen h-full">
         <Navbar />
-        <div className="px-6 ">
-          Loading...
-        </div>
+        <Loading></Loading>
       </div >
     )
 
