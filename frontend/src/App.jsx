@@ -16,6 +16,7 @@ import ProjectList from './pages/ProjectList.jsx'
 import Register from './pages/Register.jsx'
 import Test from './pages/Test.jsx'
 import Todo from './pages/Todo.jsx'
+import ChatPage from './pages/ChatPage.jsx'
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
             <Route path='/goal/:id' element={<Goal />} />
             <Route path='/todo' element={< Todo />} />
             <Route path='/test' element={< Test />} />
+            <Route path='/chat' element = {<ChatPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

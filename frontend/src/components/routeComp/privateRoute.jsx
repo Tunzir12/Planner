@@ -1,6 +1,8 @@
+import { Navigate, Outlet } from 'react-router-dom';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth } from '../../firebase';
 import { onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
+import { getFirestore, doc, getDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -8,17 +10,33 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
-
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  const [userData, setUserData] = useState(null); // Additional user profile data
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Enable session persistence
+    const fetchUserData = async (uid) => {
+      const db = getFirestore();
+      const userRef = doc(db, 'users', uid);
+      const userSnap = await getDoc(userRef);
+      
+      if (userSnap.exists()) {
+        setUserData(userSnap.data());
+      } else {
+        setUserData({ displayName: auth.currentUser?.displayName || auth.currentUser?.email });
+      }
+    };
+
     setPersistence(auth, browserLocalPersistence)
       .then(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
           setCurrentUser(user);
+          if (user) {
+            await fetchUserData(user.uid);
+          } else {
+            setUserData(null);
+          }
           setLoading(false);
         });
         return unsubscribe;
@@ -31,6 +49,7 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
+    userData,       // Add userData to context value
     loading
   };
 

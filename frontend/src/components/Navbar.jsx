@@ -18,6 +18,16 @@ const Navbar = () => {
   const location = useLocation();
 
   const goto = useNavigate();
+
+  const goToChat = async () =>{
+    try{
+      goto('/chat');
+    } catch(error){
+      console.error('Chat error:', error.message);
+    }
+    }
+  
+
   const handleSignOut = async () => {
     try {
       await signOut(auth);
@@ -75,7 +85,8 @@ const Navbar = () => {
                   </button>
                 </MenuItem>
                 <MenuItem>
-                  <button className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10">
+                  <button className="group flex w-full items-center gap-2 rounded-lg px-3 py-1.5 data-focus:bg-white/10"
+                  onClick={goToChat}>
                     Messages
                   </button>
                 </MenuItem>
