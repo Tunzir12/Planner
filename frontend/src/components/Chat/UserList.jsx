@@ -54,4 +54,4 @@ UserList.propTypes = {
   onSelectUser: PropTypes.func.isRequired,
 };
 
-export default UserList;  // Make sure to export the component
+export default UserList; 

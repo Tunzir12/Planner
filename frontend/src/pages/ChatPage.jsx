@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import UserList from '../components/Chat/UserList';
 import Chat from '../components/Chat/Chat';
-import { useAuth } from '../components/routeComp/privateRoute'; // Updated import path
+import { useAuth } from '../components/routeComp/privateRoute'; 
 
 const ChatPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
