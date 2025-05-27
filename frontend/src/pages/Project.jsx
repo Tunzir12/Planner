@@ -24,7 +24,7 @@ const DescriptionHeaders = [
 // Conversion functions
 const goalToList = (goal) => (
   [
-    <Link to={"/goal/0"} className="font-medium text-gray-900 whitespace-nowrap dark:text-white" >
+    <Link to={"/goal/" + goal.id} className="font-medium text-gray-900 whitespace-nowrap dark:text-white" >
       {goal.title}
     </Link>,
     goal.assigned,
@@ -50,6 +50,7 @@ const Project = () => {
   var { data: goals, loading: loadingGoals } = API.getGoalsFromProjectId(id)
 
   if (error) {
+    console.log(error)
     return (<div>error</div>)
   }
 

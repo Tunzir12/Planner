@@ -7,6 +7,7 @@ import {
   collection,
   getDocs,
   addDoc,
+  getDoc,
   updateDoc,
   deleteDoc,
   doc,
@@ -111,9 +112,10 @@ const getGoal = (goalId) => {
 
   const inner = async () => {
 
-    const querySnapshot = await getDocs(collection(db, "goals"), goalId);
-    const doc = querySnapshot.docs[0];
-    const goal = ({ id: doc.id, ...doc.data() })
+    const docRef = doc(db, "goals", goalId);
+    const docSnap = await getDoc(docRef);
+
+    const goal = ({ id: docSnap.id, ...docSnap.data() })
 
     return goal
   }
@@ -125,8 +127,8 @@ const API = {
   getProjects: getProjects,
   getUser: getUser,
   getProject: getProject,
-  getGoal: DummyAPI.getGoal,
   getTodo: DummyAPI.getTodo,
+  getGoal: getGoal,
   getGoalsFromProjectId: getGoalsFromProjectId,
   getEvent: DummyAPI.getEvent
 }

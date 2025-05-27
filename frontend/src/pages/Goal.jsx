@@ -6,6 +6,7 @@ import Divider from '../components/Divider'
 import Navbar from '../components/Navbar'
 import StatusTag from '../components/StatusTag'
 import Table from '../components/Table'
+import Loading from '../components/Loading'
 
 import API from '../util/Api.jsx'
 
@@ -17,9 +18,9 @@ const GoalHeaders = [
 // Conversion functions
 const goalToList = (goal) => (
   [
-    goal.assigned,
+    goal.assignedUser,
     <StatusTag statusId={goal.status} />,
-    goal.deadline
+    goal.deadline.toDate().toDateString(),
   ]
 )
 
@@ -29,7 +30,28 @@ const Project = () => {
 
   const { id } = useParams();
 
-  const goal = API.getGoal(id);
+
+  const { data: goal, loading, error } = API.getGoal(id);
+
+  if (loading)
+    return (
+      <div>
+        <Navbar />
+        <Loading></Loading>
+      </div>
+    )
+
+  if (error) {
+    console.log(error)
+
+    return (
+      <div>
+        <Navbar />
+        Error
+      </div>
+    )
+  }
+
 
   const goalList = goalToList(goal);
 
