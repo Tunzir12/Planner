@@ -67,10 +67,10 @@ const getProjects = () => {
 const getUser = (userId) => {
   const inner = async () => {
 
-    const querySnapshot = await getDocs(collection(db, "users"), userId);
+    const userDocRef = doc(db, "users", userId);
+    const userDocSnap = await getDoc(userDocRef);
 
-    const doc = querySnapshot.docs[0];
-    const user = ({ id: doc.id, ...doc.data() })
+    const user = ({ id: userDocSnap.id, ...userDocSnap.data() })
 
     return user
   }
@@ -82,14 +82,15 @@ const getProject = (projectId) => {
 
   const inner = async () => {
 
-    const querySnapshot = await getDocs(collection(db, "projects"), projectId);
-    const doc = querySnapshot.docs[0];
-    var project = ({ id: doc.id, ...doc.data() })
+    const projectDocRef = doc(db, "projects", projectId);
+    const projectDocSnap = await getDoc(projectDocRef);
 
-    const ownersSnapshot = await getDocs(collection(db, "users"), project.owner)
+    const project = ({ id: projectDocSnap.id, ...projectDocSnap.data() })
 
-    const ownerdoc = ownersSnapshot.docs[0];
-    project.owner = ({ id: ownerdoc.id, ...ownerdoc.data() })
+    const ownerDocRef = doc(db, "users", project.owner);
+    const ownerDocSnap = await getDoc(ownerDocRef);
+
+    project.owner = ({ id: ownerDocSnap.id, ...ownerDocSnap.data() })
     return project
   }
 
