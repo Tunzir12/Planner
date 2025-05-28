@@ -66,6 +66,14 @@ const Project = () => {
   const descriptionList = projectToDescriptionList(project);
   const goalList = goals.map(goalToList)
 
+
+  const dummyGoal = {
+    assignedUserId: "",
+    deadline: new Date(),
+    projectId: "v03N45JW7aG4R3ecIAuK",
+    title: "Dummy"
+  }
+
   return (
     <div className="dark:bg-gray-900 min-h-screen h-full">
       <Navbar />
@@ -76,6 +84,9 @@ const Project = () => {
         <DetailsList headers={DescriptionHeaders} data={descriptionList} />
         <Divider title="Goals" />
         <Table headers={GoalHeaders} data={goalList} />
+        <button className="btn btn-blue" onClick={() => API.addGoal(dummyGoal)}>
+          +
+        </button>
       </div>
     </div >
   )

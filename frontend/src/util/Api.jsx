@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { db } from '../firebase';
 import {
+  Timestamp,
   collection,
   getDocs,
   addDoc,
@@ -138,6 +139,30 @@ const setGoal = (goalId, goal) => {
 
 }
 
+
+const goalDefaults = {
+  assignedUserId: "",
+  deadline: Timestamp.fromDate(new Date()),
+  projectId: "v03N45JW7aG4R3ecIAuK",
+  status: 0,
+  title: "No title",
+}
+
+const addGoal = (goal) => {
+
+  const inner = async () => {
+
+    const goalDoc = {
+      ...goalDefaults,
+      ...goal,
+      deadline: Timestamp.fromDate(goal.deadline),
+    }
+
+    await addDoc(collection(db, "goals"), goalDoc)
+  }
+  return inner()
+}
+
 const API = {
   getProjects: getProjects,
   getUser: getUser,
@@ -145,6 +170,7 @@ const API = {
   getTodo: DummyAPI.getTodo,
   getGoal: getGoal,
   setGoal: setGoal,
+  addGoal: addGoal,
   getGoalsFromProjectId: getGoalsFromProjectId,
   getEvent: DummyAPI.getEvent
 }
