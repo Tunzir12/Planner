@@ -11,12 +11,13 @@ const tags = [
 
 const unkownTag = { label: "Unkown", color: "text-red-400" }
 
-const StatusTag = ({ statusId, changeable = true }) => {
+const StatusTag = ({ statusId, changeable = true, updateStatus }) => {
 
   const [selectedOption, setSelectedOption] = useState(statusId);
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
+    updateStatus(event.target.value)
   };
 
   if (statusId >= tags.length)

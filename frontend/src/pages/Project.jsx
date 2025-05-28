@@ -28,7 +28,7 @@ const goalToList = (goal) => (
       {goal.title}
     </Link>,
     goal.assigned,
-    <StatusTag statusId={goal.status} />,
+    <StatusTag statusId={goal.status} updateStatus={(status) => API.setGoal(goal.id, { status: status })} />,
     goal.deadline.toDate().toDateString()
   ]
 )

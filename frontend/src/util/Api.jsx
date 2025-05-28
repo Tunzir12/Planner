@@ -7,6 +7,7 @@ import {
   collection,
   getDocs,
   addDoc,
+  setDoc,
   getDoc,
   updateDoc,
   deleteDoc,
@@ -124,12 +125,26 @@ const getGoal = (goalId) => {
   return asyncDataWrapper(inner)
 }
 
+
+const setGoal = (goalId, goal) => {
+
+  const inner = async () => {
+
+    await setDoc(doc(db, "goals", goalId), goal, { merge: true })
+
+  }
+
+  return inner()
+
+}
+
 const API = {
   getProjects: getProjects,
   getUser: getUser,
   getProject: getProject,
   getTodo: DummyAPI.getTodo,
   getGoal: getGoal,
+  setGoal: setGoal,
   getGoalsFromProjectId: getGoalsFromProjectId,
   getEvent: DummyAPI.getEvent
 }

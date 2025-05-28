@@ -19,7 +19,7 @@ const GoalHeaders = [
 const goalToList = (goal) => (
   [
     goal.assignedUser,
-    <StatusTag statusId={goal.status} />,
+    <StatusTag statusId={goal.status} updateStatus={(status) => API.setGoal(goal.id, { status: status })} />,
     goal.deadline.toDate().toDateString(),
   ]
 )
