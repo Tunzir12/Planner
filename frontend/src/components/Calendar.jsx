@@ -48,6 +48,7 @@ const Calendar = () => {
             }
         }
         fetchEvents()
+        
     }, [user])
 
     function closeModal() {
@@ -137,7 +138,7 @@ const Calendar = () => {
                 start: currentEvent.start,
                 end: currentEvent.end,
                 allDay: currentEvent.allDay,
-                backgroundColor: currentEvent.backgroundColor,
+                backgroundColor: currentEvent.backgroundColor || (currentEvent.allDay ? "#3b82f6" : "#60a5fa"),
                 userId: user.uid 
             }
 
@@ -198,6 +199,9 @@ const Calendar = () => {
                         initialView='dayGridMonth'
                         weekends={true}
                         events={events}
+                        eventTimeFormat={{hour: 'numeric',
+                                        minute: '2-digit',
+                                        meridiem: 'short'}}
                         eventContent={renderEventContent}
                         editable={true}
                         selectable={true}
@@ -369,7 +373,7 @@ const Calendar = () => {
 function renderEventContent(eventInfo) {
     return (
         <>
-            <div className="p-1">
+            <div className="p-1 bg-blue-600 w-full rounded-lg">
                 <b>{eventInfo.event.title}</b>
                 {eventInfo.event.extendedProps?.description && (
                     <p className="text-xs">{eventInfo.event.extendedProps.description}</p>

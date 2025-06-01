@@ -128,7 +128,7 @@ export default function Chat({ otherUserId }) {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col">
       
       {/* Messages area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -160,11 +160,11 @@ export default function Chat({ otherUserId }) {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-indigo-800"
           />
           <button 
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
+            className="px-4 py-2 bg-sky-900 text-white rounded-lg hover:bg-blue-600 focus:outline-none"
             disabled={!newMessage.trim()}
           >
             Send

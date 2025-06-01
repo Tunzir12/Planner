@@ -2,17 +2,20 @@ import { useState } from 'react';
 import UserList from '../components/Chat/UserList';
 import Chat from '../components/Chat/Chat';
 import { useAuth } from '../components/routeComp/privateRoute'; 
+import Navbar from '../components/Navbar';
 
 const ChatPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const { currentUser } = useAuth();
 
   return (
+    <>
+    <Navbar />
     <div className="flex h-screen bg-cyan-950 text-white">
       {/* Sidebar with user list */}
       <div className="w-1/4 border-r ">
         <div className="p-4 border-b">
-          <h2 className="text-xl font-semibold">Chats</h2>
+          <h2 className="text-xl font-semibold">Users</h2>
         </div>
         <UserList 
           currentUser={currentUser} 
@@ -45,6 +48,7 @@ const ChatPage = () => {
         )}
       </div>
     </div>
+  </>
   );
 }
 
