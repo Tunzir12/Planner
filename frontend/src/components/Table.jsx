@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Table = ({ headers, data }) => {
+const Table = ({ headers, data, keys = [] }) => {
 
   return (
     <table className="w-full text-sm text-center rtl:text-right text-gray-500 dark:text-gray-400 ">
@@ -17,7 +17,7 @@ const Table = ({ headers, data }) => {
       <tbody>
         {data.map(
           (list, index) => (
-            <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+            <tr key={keys ? keys[index] : index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
               {list.map((element, elementIndex) => (
                 <td key={elementIndex} className="px-6 py-4">
                   {element}
