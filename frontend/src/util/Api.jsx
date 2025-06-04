@@ -59,7 +59,16 @@ const getUserProjects = (uid) => {
       owners[doc.id] = ({ id: doc.id, ...doc.data() })
     })
 
-    projects = projects.map(doc => ({ ...doc, owner: owners[doc.owner] }))
+    const goalsSnap = await getDocs(collection(db, "goals"));
+
+    const goals = goalsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    projects = projects.map(project => ({
+      ...project,
+      owner: owners[project.owner],
+      milestonesTotal: goals.filter(goal => goal.projectId == project.id).length,
+      milestonesCompleted: goals.filter(goal => (goal.projectId == project.id && goal.status == 2)).length,
+    }))
 
     return projects
   }
@@ -94,6 +103,14 @@ const getProject = (projectId) => {
     const ownerDocSnap = await getDoc(ownerDocRef);
 
     project.owner = ({ id: ownerDocSnap.id, ...ownerDocSnap.data() })
+
+    const goalsSnap = await getDocs(collection(db, "goals"));
+    const goals = goalsSnap.docs.filter(doc => doc.data().projectId == project.id)
+
+
+    project.milestonesTotal = goals.length
+    project.milestonesCompleted = goals.filter(doc => doc.data().status == 2).length
+
     return project
   }
 

@@ -50,8 +50,8 @@ const ProjectList = () => {
   const list = projects.map(projectToList);
   const keys = projects.map(project => project.id);
 
-  const createProject = (name) => ({
-    deadline: new Date(),
+  const createProject = (name, deadline) => ({
+    deadline: new Date(deadline),
     milestonesCompleted: 1,
     milestonesTotal: 3,
     name: name,
@@ -59,13 +59,21 @@ const ProjectList = () => {
     members: [currentUser.uid]
   })
 
+
+  const handleProjectFormData = (formData) => {
+    API.addProject(createProject(
+      formData.get("name"),
+      formData.get("deadline")
+    ))
+  }
+
   return (
     <div className="dark:bg-gray-900 min-h-screen h-full">
       <Navbar />
       <div className="px-6 ">
         <h1 className="px-6 py-4 text-gray-900 dark:text-white"> Projects</h1>
         <Table headers={HEADERS} data={list} keys={keys} />
-        <PopupForm title={"New Project"} handleFormData={(formData) => { API.addProject(createProject(formData.get("name"))) }}>
+        <PopupForm title={"New Project"} handleFormData={handleProjectFormData}>
           <label>
             Title:
             <input
@@ -73,7 +81,15 @@ const ProjectList = () => {
               name="name"
               required
             />
-
+            <br />
+            <label>
+              Deadline:
+              <input
+                type="date"
+                name="deadline"
+                required
+              />
+            </label>
           </label>
         </PopupForm>
       </div>

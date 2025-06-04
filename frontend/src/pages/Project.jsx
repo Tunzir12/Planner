@@ -67,12 +67,20 @@ const Project = () => {
   const goalLists = goals.map(goalToList)
   const goalKeys = goals.map(goal => goal.id)
 
-  const createGoal = (title) => ({
+  const createGoal = (title, deadline) => ({
     assignedUserId: "",
-    deadline: new Date(),
+    deadline: new Date(deadline),
     projectId: project.id,
     title: title
   })
+
+
+  const handleCreateGoal = (formData) => {
+    API.addGoal(createGoal(
+      formData.get("title"),
+      formData.get("deadline"),
+    ))
+  }
 
   return (
     <div className="dark:bg-gray-900 min-h-screen h-full">
@@ -84,7 +92,7 @@ const Project = () => {
         <DetailsList headers={DescriptionHeaders} data={descriptionList} />
         <Divider title="Goals" />
         <Table headers={GoalHeaders} data={goalLists} keys={goalKeys} />
-        <PopupForm title={"Create New Goal"} handleFormData={(formData) => { API.addGoal(createGoal(formData.get("title"))) }}>
+        <PopupForm title={"Create New Goal"} handleFormData={handleCreateGoal}>
           <label>
             Title:
             <input
@@ -92,7 +100,15 @@ const Project = () => {
               name="title"
               required
             />
-
+          </label>
+          <br />
+          <label>
+            Deadline:
+            <input
+              type="date"
+              name="deadline"
+              required
+            />
           </label>
         </PopupForm>
       </div>
