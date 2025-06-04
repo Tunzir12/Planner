@@ -104,7 +104,10 @@ const getGoalsFromProjectId = (projectId) => {
 
   const inner = async () => {
     const querySnapshot = await getDocs(collection(db, "goals"));
-    const goals = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    const goals = querySnapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(goal => goal.projectId == projectId)
 
     return goals
   }
@@ -167,6 +170,7 @@ const projectDefaults = {
   deadline: new Date(),
   milestonesCompleted: 0,
   milestonesTotal: 0,
+  members: [],
 }
 
 const addProject = (project) => {
