@@ -46,12 +46,13 @@ const ProjectList = () => {
 
   const list = projects.map(projectToList);
 
+  const keys = projects.map(project => project.id);
   return (
     <div className="dark:bg-gray-900 min-h-screen h-full">
       <Navbar />
       <div className="px-6 ">
         <h1 className="px-6 py-4 text-gray-900 dark:text-white"> Projects</h1>
-        <Table headers={HEADERS} data={list} />
+        <Table headers={HEADERS} data={list} keys={keys} />
       </div>
     </div >
   )

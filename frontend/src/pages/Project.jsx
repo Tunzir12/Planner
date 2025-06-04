@@ -64,7 +64,8 @@ const Project = () => {
     )
 
   const descriptionList = projectToDescriptionList(project);
-  const goalList = goals.map(goalToList)
+  const goalLists = goals.map(goalToList)
+  const goalKeys = goals.map(goal => goal.id)
 
   const createGoal = (title) => ({
     assignedUserId: "",
@@ -82,7 +83,7 @@ const Project = () => {
         </h1>
         <DetailsList headers={DescriptionHeaders} data={descriptionList} />
         <Divider title="Goals" />
-        <Table headers={GoalHeaders} data={goalList} />
+        <Table headers={GoalHeaders} data={goalLists} keys={goalKeys} />
         <PopupForm title={"Create New Goal"} handleFormData={(formData) => { API.addGoal(createGoal(formData.get("title"))) }}>
           <label>
             Title:
