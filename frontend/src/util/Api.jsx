@@ -39,7 +39,7 @@ const asyncDataWrapper = (asyncFunction) => {
   return { data, loading, error };
 }
 
-const getProjects = () => {
+const getUserProjects = (uid) => {
 
   const inner = async () => {
 
@@ -47,6 +47,7 @@ const getProjects = () => {
 
     var projects = querySnapshot.docs
       .map(doc => ({ id: doc.id, ...doc.data() }))
+      .filter(project => (project.members.includes(uid)))
 
     const usersRef = collection(db, 'users')
 
@@ -184,7 +185,7 @@ const addProject = (project) => {
 }
 
 const API = {
-  getProjects: getProjects,
+  getUserProjects: getUserProjects,
   getUser: getUser,
   getProject: getProject,
   getTodo: DummyAPI.getTodo,

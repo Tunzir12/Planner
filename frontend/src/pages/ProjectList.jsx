@@ -30,7 +30,7 @@ const projectToList = (pr) => (
 const ProjectList = () => {
 
   const { currentUser } = useAuth();
-  const { data: projects, loading, error } = API.getProjects();
+  const { data: projects, loading, error } = API.getUserProjects(currentUser.uid);
 
 
   if (loading)
@@ -56,6 +56,7 @@ const ProjectList = () => {
     milestonesTotal: 3,
     name: name,
     owner: currentUser.uid,
+    members: [currentUser.uid]
   })
 
   return (
