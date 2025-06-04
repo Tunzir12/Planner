@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar'
 import StatusTag from '../components/StatusTag'
 import Table from '../components/Table'
 import Loading from '../components/Loading'
+import PopupForm from '../components/PopupForm.jsx'
 
 import API from '../util/Api.jsx'
 
@@ -62,17 +63,15 @@ const Project = () => {
       </div>
     )
 
-
   const descriptionList = projectToDescriptionList(project);
   const goalList = goals.map(goalToList)
 
-
-  const dummyGoal = {
+  const createGoal = (title) => ({
     assignedUserId: "",
     deadline: new Date(),
-    projectId: "v03N45JW7aG4R3ecIAuK",
-    title: "Dummy"
-  }
+    projectId: project.id,
+    title: title
+  })
 
   return (
     <div className="dark:bg-gray-900 min-h-screen h-full">
@@ -84,12 +83,21 @@ const Project = () => {
         <DetailsList headers={DescriptionHeaders} data={descriptionList} />
         <Divider title="Goals" />
         <Table headers={GoalHeaders} data={goalList} />
-        <button className="btn btn-blue" onClick={() => API.addGoal(dummyGoal)}>
-          +
-        </button>
+        <PopupForm title={"Create New Goal"} handleFormData={(formData) => { API.addGoal(createGoal(formData.get("title"))) }}>
+          <label>
+            Title:
+            <input
+              type="text"
+              name="title"
+              required
+            />
+
+          </label>
+        </PopupForm>
       </div>
     </div >
   )
 }
+
 
 export default Project
