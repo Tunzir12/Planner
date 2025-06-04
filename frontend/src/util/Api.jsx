@@ -139,7 +139,6 @@ const setGoal = (goalId, goal) => {
 
 }
 
-
 const goalDefaults = {
   assignedUserId: "",
   deadline: Timestamp.fromDate(new Date()),
@@ -163,6 +162,27 @@ const addGoal = (goal) => {
   return inner()
 }
 
+const projectDefaults = {
+  deadline: new Date(),
+  milestonesCompleted: 0,
+  milestonesTotal: 0,
+}
+
+const addProject = (project) => {
+
+  const inner = async () => {
+
+    const projectDoc = {
+      ...projectDefaults,
+      ...project,
+      deadline: Timestamp.fromDate(project.deadline),
+    }
+
+    await addDoc(collection(db, "projects"), projectDoc)
+  }
+  return inner()
+}
+
 const API = {
   getProjects: getProjects,
   getUser: getUser,
@@ -171,6 +191,7 @@ const API = {
   getGoal: getGoal,
   setGoal: setGoal,
   addGoal: addGoal,
+  addProject: addProject,
   getGoalsFromProjectId: getGoalsFromProjectId,
   getEvent: DummyAPI.getEvent
 }
