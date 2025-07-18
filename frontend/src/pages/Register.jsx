@@ -1,11 +1,11 @@
 import {React, useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import {auth } from '../firebase';
+import {auth , db} from '../firebase';
+import {doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
-
-
 import logo from '../assets/logo_color.svg'
+
 
 const Register = () => {
 
@@ -18,17 +18,24 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
+      const userCredentials = await createUserWithEmailAndPassword(auth, email, password) ;
+      const user = userCredentials.user;
 
-        return updateProfile(user, {
-          displayName: displayName
+      await updateProfile(user, {
+          displayName: displayName,
         });
-      });
-      console.log('User signed up!');
+
+      await setDoc(doc(db,"users", user.uid),{
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          createdAt: serverTimestamp(),
+        })
+
+      console.log('User signed up!', user.displayName);
       goto('/home');
-    } catch (error) {
+      
+    }catch (error) {
       console.error('Error signing up:', error.message);
     }
   };
@@ -42,7 +49,7 @@ const Register = () => {
         </header>
         <form onSubmit={handleSubmit}>
           <label className="block mb-2" >Name</label>
-          <input className="w-full p-2 mb-6 border-b-2 outline-none" type="text" name="displayName" id="displayName" placeholder='Enter Full Name' value={displayName} onChange={(e) => setDisplayName(e.target.value)} /><br />
+          <input className="w-full p-2 mb-6 border-b-2 outline-none" type="displayName" name="displayName" id="displayName" placeholder='Enter Full Name' value={displayName} onChange={(e) => setDisplayName(e.target.value)} /><br />
 
           <label className="block mb-2" >Email</label>
           <input className="w-full p-2 mb-6 border-b-2 outline-none" type="email" name="email" id="email" placeholder='Enter Email' value={email} onChange={(e) => setEmail(e.target.value)} /><br />
