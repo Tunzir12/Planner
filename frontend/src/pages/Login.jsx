@@ -40,7 +40,7 @@ const Login = () => {
           <button className="w-full bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 mb-6 rounded" type="submit"  >
             Log In </button>
 
-          <Link className="text-sm float-left hover:text-gray-700" to='/home' >Forgot Password?</Link>
+          <Link className="text-sm float-left hover:text-gray-700" to='/' >Forgot Password?</Link>
           <Link className="text-sm float-right hover:text-gray-700" to='/register' >Create account</Link>
         </form>
       </div>
