@@ -17,10 +17,10 @@ const Login = () => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      console.log('User signed up!');
+      console.log('User logged in!');
       goto('/home');
     } catch (error) {
-      console.error('Error signing up:', error.message);
+      console.error('Error ;logging in!', error.message);
     }
   };
 
