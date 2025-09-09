@@ -50,25 +50,6 @@ const formatDateForInput = (date) => {
   return `${year}-${month}-${day}`;
 };
 
-// Parse date from input[type="date"] - create date in local timezone
-const parseDateFromInput = (dateString, timeString = null) => {
-  if (!dateString) return new Date();
-  
-  // Parse the date string (YYYY-MM-DD)
-  const [year, month, day] = dateString.split('-').map(Number);
-  
-  let date;
-  if (timeString) {
-    // If time is provided, parse it too
-    const [hours, minutes] = timeString.split(':').map(Number);
-    date = new Date(year, month - 1, day, hours, minutes);
-  } else {
-    // For all-day events, set to start of day in local time
-    date = new Date(year, month - 1, day, 0, 0, 0, 0);
-  }
-  
-  return date;
-};
 
 // Set time to start of day (00:00:00) in local time
 const setToStartOfDay = (date) => {
@@ -235,14 +216,40 @@ const handleAllDayChange = (e) => {
     let newEnd = prev.end ? new Date(prev.end) : new Date();
     
     if (isAllDay) {
-      // Convert to all-day: set start to 00:00 and end to 23:59 in local time
-      newStart = setToStartOfDay(newStart);
-      newEnd = setToEndOfDay(newStart); // End of the same day for all-day events
+      // Convert to all-day: use only the date portion
+      // If it was a multi-day event, preserve the date range but adjust times
+      const startDate = setToStartOfDay(newStart);
+      const endDate = setToStartOfDay(newEnd);
+      
+      // If it's a single day event or same start/end date
+      if (startDate.getTime() === endDate.getTime()) {
+        newStart = startDate;
+        newEnd = setToEndOfDay(startDate);
+      } else {
+        // For multi-day events, preserve the date range but adjust times
+        newStart = startDate;
+        newEnd = setToEndOfDay(endDate);
+      }
     } else {
-      // Convert to timed event: if it was all-day, set reasonable times
+      // Convert from all-day to timed event
       if (prev.allDay) {
-        newStart.setHours(9, 0, 0, 0); // 9:00 AM
-        newEnd.setHours(17, 0, 0, 0); // 5:00 PM
+        // If it was all-day, set reasonable default times (9 AM to 5 PM)
+        const startOfDay = setToStartOfDay(newStart);
+        startOfDay.setHours(9, 0, 0, 0); // 9:00 AM
+        
+        const endOfDay = setToStartOfDay(newEnd);
+        // If it's a single day event, end at 5 PM
+        if (newStart.getDate() === newEnd.getDate() && 
+            newStart.getMonth() === newEnd.getMonth() && 
+            newStart.getFullYear() === newEnd.getFullYear()) {
+          endOfDay.setHours(17, 0, 0, 0); // 5:00 PM
+        } else {
+          // For multi-day events, end at 11:59 PM of the last day
+          endOfDay.setHours(23, 59, 59, 999);
+        }
+        
+        newStart = startOfDay;
+        newEnd = endOfDay;
       }
     }
     
@@ -268,7 +275,7 @@ const handleAllDayChange = (e) => {
       }
 
       // Validate that start is before end
-      if (currentEvent.start >= currentEvent.end) {
+      if (currentEvent.allDay == "false" && currentEvent.start >= currentEvent.end) {
         setOperationError('End time must be after start time');
         return;
       }
@@ -294,6 +301,7 @@ const handleAllDayChange = (e) => {
         end: endDate,
         allDay: Boolean(currentEvent.allDay),
         backgroundColor: currentEvent.backgroundColor || (currentEvent.allDay ? "#3b82f6" : "#60a5fa"),
+        
       };
 
       if (isEditMode && currentEventId) {

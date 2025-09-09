@@ -1,4 +1,3 @@
-// hooks/useEvents.js
 import { useState, useEffect } from 'react';
 import { firebaseRest } from './firebaseRest';
 import { auth } from './firebase';
@@ -56,7 +55,7 @@ export const useEvents = () => {
     setLoading(true);
     setError(null);
     try {
-      const updatedEvent = await firebaseRest.update('events', id, eventData);
+      const updatedEvent = await firebaseRest.update('events', id,{ ...eventData, userId: user.uid});
       setEvents(prev => prev.map(event => event.id === id ? updatedEvent : event));
       return updatedEvent;
     } catch (err) {
