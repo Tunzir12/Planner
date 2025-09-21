@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../routeComp/privateRoute';
 
@@ -39,7 +39,10 @@ export default function Chat({ otherUserId }) {
       }
       else if (data.type === 'new_message') {
         // Add new message to UI
-        setMessages(prev => [...prev, data.message]);
+        setMessages(prev => [...prev, {
+          ...data.message,
+          createdAt: new Date(data.message.createdAt)
+        }]);
       }
       else if (data.type === 'message_sent') {
         // Message was successfully sent
@@ -108,25 +111,31 @@ export default function Chat({ otherUserId }) {
       }
     };
 
-    ensureChatRoomExists();
+    if (otherUserData) {
+      ensureChatRoomExists();
+    }
   }, [currentUser, otherUserId, chatId, otherUserData]);
 
   // Load message history when component mounts
   useEffect(() => {
     const fetchMessageHistory = async () => {
       try {
-        const messagesRef = db.collection('messages')
-          .where('chatId', '==', chatId)
-          .orderBy('createdAt');
+        const messagesRef = collection(db, 'messages');
+        const q = query(
+          messagesRef, 
+          where('chatId', '==', chatId),
+          orderBy('createdAt')
+        );
         
-        const snapshot = await messagesRef.get();
+        const snapshot = await getDocs(q);
         const messagesData = [];
         
         snapshot.forEach(doc => {
+          const data = doc.data();
           messagesData.push({
             id: doc.id,
-            ...doc.data(),
-            createdAt: doc.data().createdAt?.toDate()
+            ...data,
+            createdAt: data.createdAt?.toDate() || new Date()
           });
         });
         
@@ -164,11 +173,27 @@ export default function Chat({ otherUserId }) {
     }
   };
 
+  // Helper function to format message time
+  const formatMessageTime = (timestamp) => {
+    if (!timestamp) return '';
+    
+    try {
+      const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+      return date.toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+    } catch (error) {
+      console.error('Error formatting time:', error);
+      return '';
+    }
+  };
+
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       
       {/* Connection status */}
-      <div className="p-2 bg-gray-100 text-center text-sm">
+      <div className="p-2 bg-gray-100 text-center text-sm text-black">
         Status: {isConnected ? 'Connected' : 'Connecting...'}
         {!isConnected && (
           <span className="ml-2 text-orange-500">
@@ -191,10 +216,7 @@ export default function Chat({ otherUserId }) {
             >
               <p>{message.text}</p>
               <p className="text-xs opacity-70 mt-1">
-                {message.createdAt ? message.createdAt.toLocaleTimeString([], { 
-                  hour: '2-digit', 
-                  minute: '2-digit' 
-                }) : ''}
+                {formatMessageTime(message.createdAt)}
               </p>
             </div>
           </div>
