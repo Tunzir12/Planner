@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { 
   doc, getDoc, setDoc, collection, query, 
-  where, orderBy, onSnapshot, addDoc, serverTimestamp 
+  where, orderBy, onSnapshot, addDoc, serverTimestamp,
+  updateDoc,
+  arrayUnion
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../routeComp/privateRoute';
 
-export default function Chat({ otherUserId }) {
+export default function Chat({ otherUserId, isGroupChat = false, groupData = null }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [otherUserData, setOtherUserData] = useState(null);
@@ -15,49 +17,71 @@ export default function Chat({ otherUserId }) {
   const { currentUser } = useAuth();
   const messagesEndRef = useRef(null);
 
-  // Generate consistent chat ID between two users
-  const chatId = [currentUser?.uid, otherUserId].sort().join('_');
+  // Generate chat ID based on chat type
+  const chatId = isGroupChat ? otherUserId : [currentUser?.uid, otherUserId].sort().join('_');
 
-  // Fetch the other user's data
+  // Fetch the other user's data (for individual chats) or group data
   useEffect(() => {
     if (!otherUserId) return;
 
-    const fetchOtherUser = async () => {
+    const fetchChatData = async () => {
       try {
         setChatLoading(true);
-        const userRef = doc(db, 'users', otherUserId);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          const userData = userSnap.data();
+        
+        if (isGroupChat && groupData) {
+          // Use provided group data
           setOtherUserData({
-            uid: userSnap.id,
-            displayName: userData.displayName || userData.email || 'Unknown User',
-            email: userData.email || 'No email',
-            ...userData
+            ...groupData,
+            isGroupChat: true
           });
+        } else if (isGroupChat) {
+          // Fetch group data if not provided
+          const groupRef = doc(db, 'chats', otherUserId);
+          const groupSnap = await getDoc(groupRef);
+          if (groupSnap.exists()) {
+            setOtherUserData({
+              ...groupSnap.data(),
+              isGroupChat: true
+            });
+          }
         } else {
-          // If user doesn't exist, create a fallback
-          setOtherUserData({
-            uid: otherUserId,
-            displayName: 'Unknown User',
-            email: 'No email'
-          });
+          // Fetch individual user data
+          const userRef = doc(db, 'users', otherUserId);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
+            setOtherUserData({
+              uid: userSnap.id,
+              displayName: userData.displayName || userData.email || 'Unknown User',
+              email: userData.email || 'No email',
+              isGroupChat: false,
+              ...userData
+            });
+          } else {
+            setOtherUserData({
+              uid: otherUserId,
+              displayName: 'Unknown User',
+              email: 'No email',
+              isGroupChat: false
+            });
+          }
         }
       } catch (error) {
-        console.error('Error fetching other user data:', error);
-        // Create fallback user data
+        console.error('Error fetching chat data:', error);
+        // Create fallback data
         setOtherUserData({
           uid: otherUserId,
-          displayName: 'Unknown User',
-          email: 'No email'
+          displayName: isGroupChat ? 'Unknown Group' : 'Unknown User',
+          email: 'No email',
+          isGroupChat: isGroupChat
         });
       } finally {
         setChatLoading(false);
       }
     };
 
-    fetchOtherUser();
-  }, [otherUserId]);
+    fetchChatData();
+  }, [otherUserId, isGroupChat, groupData]);
 
   // Create or get chat room
   useEffect(() => {
@@ -68,41 +92,34 @@ export default function Chat({ otherUserId }) {
         const chatRef = doc(db, 'chats', chatId);
         const chatSnap = await getDoc(chatRef);
         
-        // Ensure we have valid user data
-        const currentUserDisplayName = currentUser.displayName || currentUser.email || 'You';
-        const otherUserDisplayName = otherUserData.displayName || otherUserData.email || 'Unknown User';
-        const currentUserEmail = currentUser.email || 'No email';
-        const otherUserEmail = otherUserData.email || 'No email';
+        if (!chatSnap.exists() && !isGroupChat) {
+          // Only create individual chat rooms, groups are created separately
+          const currentUserDisplayName = currentUser.displayName || currentUser.email || 'You';
+          const otherUserDisplayName = otherUserData.displayName || otherUserData.email || 'Unknown User';
+          const currentUserEmail = currentUser.email || 'No email';
+          const otherUserEmail = otherUserData.email || 'No email';
 
-        const participantInfo = {
-          [currentUser.uid]: {
-            displayName: currentUserDisplayName,
-            email: currentUserEmail
-          },
-          [otherUserId]: {
-            displayName: otherUserDisplayName,
-            email: otherUserEmail
-          }
-        };
+          const participantInfo = {
+            [currentUser.uid]: {
+              displayName: currentUserDisplayName,
+              email: currentUserEmail
+            },
+            [otherUserId]: {
+              displayName: otherUserDisplayName,
+              email: otherUserEmail
+            }
+          };
 
-        if (!chatSnap.exists()) {
-          // Create new chat room
           await setDoc(chatRef, {
             participants: [currentUser.uid, otherUserId],
             lastMessage: '',
             lastMessageTime: serverTimestamp(),
             participantInfo: participantInfo,
+            isGroupChat: false,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp()
           });
-          console.log('Chat room created successfully');
-        } else {
-          // Update participant info if needed (merge to preserve existing data)
-          await setDoc(chatRef, {
-            participantInfo: participantInfo,
-            updatedAt: serverTimestamp()
-          }, { merge: true });
-          console.log('Chat room updated successfully');
+          console.log('Individual chat room created successfully');
         }
       } catch (error) {
         console.error('Error ensuring chat room exists:', error);
@@ -110,7 +127,7 @@ export default function Chat({ otherUserId }) {
     };
 
     ensureChatRoomExists();
-  }, [currentUser, otherUserId, chatId, otherUserData, chatLoading]);
+  }, [currentUser, otherUserId, chatId, otherUserData, chatLoading, isGroupChat]);
 
   // Real-time message listener
   useEffect(() => {
@@ -164,28 +181,37 @@ export default function Chat({ otherUserId }) {
       const messageData = {
         text: newMessage.trim(),
         senderId: currentUser.uid,
-        receiverId: otherUserId,
         chatId: chatId,
         createdAt: serverTimestamp(),
-        read: false,
-        senderName: senderName
+        readBy: [currentUser.uid], // Track who has read the message
+        senderName: senderName,
+        isGroupMessage: isGroupChat // Mark as group message if it's a group chat
       };
+
+      // Add receiver info for individual chats
+      if (!isGroupChat) {
+        messageData.receiverId = otherUserId;
+      }
+
+      console.log('Sending message:', messageData);
 
       // Add message to Firestore
       const messagesRef = collection(db, 'messages');
-      await addDoc(messagesRef, messageData);
+      const messageRef = await addDoc(messagesRef, messageData);
 
       // Update chat room with last message info
       const chatRef = doc(db, 'chats', chatId);
-      await setDoc(chatRef, {
+      await updateDoc(chatRef, {
         lastMessage: newMessage.trim(),
         lastMessageTime: serverTimestamp(),
         lastMessageSender: currentUser.uid,
         updatedAt: serverTimestamp()
-      }, { merge: true });
+      });
 
       // Clear input field
       setNewMessage('');
+      
+      console.log('Message sent successfully:', messageRef.id);
 
     } catch (error) {
       console.error("Error sending message:", error);
@@ -200,12 +226,14 @@ export default function Chat({ otherUserId }) {
     const markMessagesAsRead = async () => {
       try {
         const unreadMessages = messages.filter(
-          msg => msg.receiverId === currentUser.uid && !msg.read
+          msg => !msg.readBy?.includes(currentUser.uid)
         );
 
         for (const message of unreadMessages) {
           const messageRef = doc(db, 'messages', message.id);
-          await setDoc(messageRef, { read: true }, { merge: true });
+          await updateDoc(messageRef, {
+            readBy: arrayUnion(currentUser.uid)
+          });
         }
       } catch (error) {
         console.error('Error marking messages as read:', error);
@@ -248,13 +276,18 @@ export default function Chat({ otherUserId }) {
     if (message.senderId === currentUser?.uid) {
       return 'You';
     }
-    return otherUserData?.displayName || otherUserData?.email || 'Unknown User';
+    
+    if (isGroupChat && otherUserData?.participantInfo?.[message.senderId]) {
+      return otherUserData.participantInfo[message.senderId].displayName;
+    }
+    
+    return message.senderName || 'Unknown User';
   };
 
   if (!otherUserId) {
     return (
       <div className="flex items-center justify-center h-full text-gray-500">
-        Select a user to start chatting
+        Select a user or group to start chatting
       </div>
     );
   }
@@ -273,15 +306,32 @@ export default function Chat({ otherUserId }) {
       {/* Chat header */}
       <div className="p-4 border-b bg-gray-50">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-            {otherUserData?.displayName?.charAt(0) || otherUserData?.email?.charAt(0) || 'U'}
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${
+            isGroupChat ? 'bg-purple-500' : 'bg-blue-500'
+          }`}>
+            {isGroupChat ? (
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            ) : (
+              otherUserData?.displayName?.charAt(0) || otherUserData?.email?.charAt(0) || 'U'
+            )}
           </div>
           <div>
             <h2 className="font-semibold text-gray-800">
-              {otherUserData?.displayName || otherUserData?.email || 'Loading...'}
+              {isGroupChat ? otherUserData?.name : (otherUserData?.displayName || otherUserData?.email || 'Loading...')}
+              {isGroupChat && (
+                <span className="ml-2 text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
+                  Group
+                </span>
+              )}
             </h2>
             <p className="text-sm text-gray-500">
-              {isConnected ? 'Online' : 'Offline'}
+              {isGroupChat ? (
+                `${otherUserData?.participants?.length || 0} members`
+              ) : (
+                isConnected ? 'Online' : 'Offline'
+              )}
             </p>
           </div>
         </div>
@@ -298,7 +348,7 @@ export default function Chat({ otherUserId }) {
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500">
-            No messages yet. Start the conversation!
+            {isGroupChat ? 'No messages in this group yet. Start the conversation!' : 'No messages yet. Start the conversation!'}
           </div>
         ) : (
           messages.map((message) => (
@@ -307,7 +357,7 @@ export default function Chat({ otherUserId }) {
               className={`flex ${message.senderId === currentUser?.uid ? 'justify-end' : 'justify-start'}`}
             >
               <div className="max-w-xs lg:max-w-md">
-                {message.senderId !== currentUser?.uid && (
+                {(isGroupChat && message.senderId !== currentUser?.uid) && (
                   <p className="text-xs text-gray-500 mb-1 ml-2">
                     {getSenderName(message)}
                   </p>
@@ -321,7 +371,7 @@ export default function Chat({ otherUserId }) {
                   <p className={`text-xs mt-1 ${message.senderId === currentUser?.uid ? 'text-blue-100' : 'text-gray-500'}`}>
                     {formatMessageTime(message.createdAt)}
                     {message.senderId === currentUser?.uid && (
-                      message.read ? ' ✓✓' : ' ✓'
+                      message.readBy?.length > 1 ? ' ✓✓' : ' ✓'
                     )}
                   </p>
                 </div>
@@ -334,12 +384,12 @@ export default function Chat({ otherUserId }) {
       
       {/* Message input */}
       <form onSubmit={handleSendMessage} className="p-4 border-t bg-gray-50">
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 text-black">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type a message..."
+            placeholder={isGroupChat ? "Type a message to the group..." : "Type a message..."}
             className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             disabled={!isConnected}
           />

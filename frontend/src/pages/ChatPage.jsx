@@ -1,44 +1,117 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import UserList from '../components/Chat/UserList';
 import Chat from '../components/Chat/Chat';
 import { useAuth } from '../components/routeComp/privateRoute'; 
 import Navbar from '../components/Navbar';
 
 const ChatPage = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notification, setNotification] = useState(null);
   const { currentUser } = useAuth();
 
-  // Function to handle user selection
+  // Debug selectedChat changes
+  useEffect(() => {
+    console.log('=== SELECTED CHAT CHANGED ===', selectedChat);
+  }, [selectedChat]);
+
+  // Function to handle user selection - FIXED
   const handleSelectUser = (user) => {
-    setSelectedUser(user);
+    console.log('=== SELECTING USER ===', user);
+    setSelectedChat(user); // Set selectedChat directly
+  };
+
+  const handleNewMessage = (messageInfo) => {
+    setNotification(messageInfo);
+    setShowNotification(true);
+    
+    // Auto-hide notification after 5 seconds
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 5000);
+  };
+
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  // Get display name for the header
+  const getChatDisplayName = () => {
+    if (!selectedChat) return '';
+    
+    if (selectedChat.isGroupChat) {
+      return selectedChat.name || 'Group Chat';
+    } else {
+      return selectedChat.DisplayName || selectedChat.displayName || selectedChat.email || 'Unknown User';
+    }
   };
 
   return (
     <>
       <Navbar />
       <div className="flex h-screen bg-cyan-950 text-white">
-        {/* Sidebar with user list */}
-        <div className="w-1/4 border-r border-gray-700">
-          <div className="p-4 border-b border-gray-700">
-            <h2 className="text-xl font-semibold">Users</h2>
+        {/* Notification */}
+        {showNotification && notification && (
+          <div className="fixed top-4 right-4 bg-blue-500 text-white p-4 rounded-lg shadow-lg z-50 max-w-sm">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="font-semibold">
+                  New message in {notification.isGroup ? notification.chatName : 'chat'}
+                </p>
+                <p className="text-sm opacity-90">
+                  <strong>{notification.sender}:</strong> {notification.message}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowNotification(false)}
+                className="text-white hover:text-gray-200 ml-2"
+              > 
+                ×
+              </button>
+            </div>
           </div>
-          <UserList 
-            currentUser={currentUser} 
+        )}
+
+        {/* UserList Sidebar */}
+        <div className="w-1/3">
+          <UserList
+            currentUser={currentUser}
             onSelectUser={handleSelectUser}
-            selectedUser={selectedUser}
+            selectedUser={selectedChat}
+            onNewMessage={handleNewMessage}
           />
         </div>
         
-        {/* Main chat area */}
+        {/* Main chat area - FIXED: Use selectedChat instead of selectedUser */}
         <div className="flex-1 flex flex-col bg-cyan-950">
-          {selectedUser ? (
+          {selectedChat ? (
             <>
-              <div className="p-4 border-b border-gray-700">
+              <div className="p-4 border-b border-gray-700 bg-cyan-900">
                 <h2 className="text-xl font-semibold">
-                  Chat with {selectedUser.DisplayName || selectedUser.email || selectedUser.displayName}
+                  {selectedChat.isGroupChat ? (
+                    <>
+                      <span className="text-purple-400">Group: </span>
+                      {getChatDisplayName()}
+                      <span className="ml-2 text-sm text-gray-300">
+                        ({selectedChat.participants?.length || 0} members)
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-blue-400">Chat with </span>
+                      {getChatDisplayName()}
+                    </>
+                  )}
                 </h2>
               </div>
-              <Chat otherUserId={selectedUser.id || selectedUser.uid} />
+              <Chat 
+                key={selectedChat.id} 
+                otherUserId={selectedChat.id}
+                isGroupChat={selectedChat.isGroupChat || false}
+                groupData={selectedChat.isGroupChat ? selectedChat : null}
+              />
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center bg-cyan-950">
@@ -52,7 +125,7 @@ const ChatPage = () => {
                   No chat selected
                 </h3>
                 <p className="text-gray-400">
-                  Select a user from the sidebar to start chatting
+                  Select a user or group from the sidebar to start chatting
                 </p>
               </div>
             </div>
