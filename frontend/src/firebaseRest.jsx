@@ -1,4 +1,3 @@
-// services/firebaseRest.js
 import { auth } from './firebase';
 
 const FIRESTORE_URL = 'https://firestore.googleapis.com/v1/projects';
