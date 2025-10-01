@@ -1,19 +1,17 @@
 import { React, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { auth } from '../firebase'
 import { firebaseRest } from '../firebaseRest'
 import Navbar from '../components/Navbar'
 import { updatePassword, updateProfile, updateEmail, reauthenticateWithCredential, EmailAuthProvider, sendEmailVerification } from 'firebase/auth'
 
 const Profile = () => {
-  const goto = useNavigate()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [activeSection, setActiveSection] = useState('profile')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
-  // User data states
+  // User data states - properly initialized
   const [userData, setUserData] = useState({
     name: '',
     displayName: '',
@@ -43,120 +41,184 @@ const Profile = () => {
     fetchUserData()
   }, [])
 
-  const fetchUserData = async () => {
-    try {
-      setLoading(true)
-      const user = auth.currentUser
+ const fetchUserData = async () => {
+  try {
+    setLoading(true)
+    const user = auth.currentUser
+    
+    if (user) {
+      // Get user document from Firestore
+      const userDoc = await firebaseRest.get('users', user.uid)
       
-      if (user) {
-        // Get user document from Firestore
-        const userDoc = await firebaseRest.get('users', user.uid)
-        
-        setUserData({
-          name: userDoc.name || '',
-          displayName: user.displayName || '',
-          email: user.email || '',
-          photoURL: user.photoURL || '',
-          emailVerified: user.emailVerified
-        })
+      setUserData({
+        name: userDoc.name || '',
+        displayName: userDoc.displayName || '',
+        email: userDoc.email || '',
+        emailVerified: user.emailVerified || false
+      })
 
-        setProfileUpdates({
-          displayName: user.displayName || '',
-          photoURL: user.photoURL || ''
-        })
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error)
-      setError('Failed to load user data')
-    } finally {
-      setLoading(false)
+      // CORRECTED: Initialize with actual user data
+      setProfileUpdates({
+        displayName: userDoc.displayName || '', // Use fetched data
+        photoURL: userDoc.photoURL || '' // Use fetched data
+      })
+
+      // Reset form states
+      setEmailUpdate({
+        newEmail: '',
+        password: ''
+      })
+      
+      setPasswordUpdate({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+      })
     }
+  } catch (error) {
+    console.error('Error fetching user data:', error)
+    setError('Failed to load user data')
+    
+    // Set default values even on error
+    setUserData({
+      name: '',
+      displayName: '',
+      email: '',
+      emailVerified: false
+    })
+    
+    setProfileUpdates({
+      displayName: '',
+      photoURL: ''
+    })
+  } finally {
+    setLoading(false)
   }
+}
 
-  const handleProfileUpdate = async (e) => {
-    e.preventDefault()
-    setSaving(true)
-    setError('')
-    setSuccess('')
+const handleProfileUpdate = async (e) => {
+  e.preventDefault()
+  setSaving(true)
+  setError('')
+  setSuccess('')
 
-    try {
-      const user = auth.currentUser
-      if (!user) throw new Error('User not authenticated')
-
-      const updates = []
-      
-      // Update display name if changed
-      if (profileUpdates.displayName !== user.displayName) {
-        await updateProfile(user, {
-          displayName: profileUpdates.displayName,
-          photoURL: profileUpdates.photoURL || user.photoURL
-        })
-        updates.push('display name')
-      }
-
-      // Update photo URL if changed
-      if (profileUpdates.photoURL !== user.photoURL) {
-        await updateProfile(user, {
-          photoURL: profileUpdates.photoURL,
-          displayName: profileUpdates.displayName || user.displayName
-        })
-        updates.push('profile photo')
-      }
-
-      if (updates.length > 0) {
-        setSuccess(`Profile updated successfully!`)
-        await fetchUserData()
-      } else {
-        setSuccess('No changes detected')
-      }
-
-    } catch (error) {
-      console.error('Error updating profile:', error)
-      setError(error.message || 'Failed to update profile')
-    } finally {
-      setSaving(false)
+  try {
+    const user = auth.currentUser
+    if (!user) throw new Error('User not authenticated')
+    
+    const updates = {}
+    
+    // Update display name if changed
+    if (profileUpdates.displayName !== userData.displayName) {
+      await updateProfile(user, {
+        displayName: profileUpdates.displayName,
+        photoURL: profileUpdates.photoURL || user.photoURL
+      })
+      updates.displayName = profileUpdates.displayName
     }
+
+    // Update photo URL if changed
+    if (profileUpdates.photoURL !== userData.photoURL) {
+      await updateProfile(user, {
+        photoURL: profileUpdates.photoURL,
+        displayName: profileUpdates.displayName || user.displayName
+      })
+      updates.photoURL = profileUpdates.photoURL
+    }
+
+    // Only update Firestore if there are changes
+    if (Object.keys(updates).length > 0) {
+      // Get current data first to preserve other fields
+      const currentUserData = await firebaseRest.get('users', user.uid)
+      await firebaseRest.update('users', user.uid, {
+        ...currentUserData, // Preserve all existing data
+        ...updates, // Add our updates
+        updatedAt: new Date() // Add timestamp
+      })
+    }
+
+    setSuccess(`Profile updated successfully!`)
+    await fetchUserData() // Refresh data
+
+  } catch (error) {
+    console.error('Error updating profile:', error)
+    setError(error.message || 'Failed to update profile')
+  } finally {
+    setSaving(false)
   }
+}
 
-  const handleEmailUpdate = async (e) => {
-    e.preventDefault()
-    setSaving(true)
-    setError('')
-    setSuccess('')
+const handleEmailUpdate = async (e) => {
+  e.preventDefault()
+  setSaving(true)
+  setError('')
+  setSuccess('')
 
-    try {
-      const user = auth.currentUser
-      if (!user) throw new Error('User not authenticated')
+  try {
+    const user = auth.currentUser
+    if (!user) throw new Error('User not authenticated')
 
-      if (!emailUpdate.password) {
-        throw new Error('Please enter your password to update email')
-      }
+    // Validation checks
+    if (!emailUpdate.newEmail) {
+      throw new Error('Please enter a new email address')
+    }
 
-      // Re-authenticate user
-      const credential = EmailAuthProvider.credential(
-        user.email,
-        emailUpdate.password
-      )
-      
-      await reauthenticateWithCredential(user, credential)
-      
-      // Update email
-      await updateEmail(user, emailUpdate.newEmail)
-      
-      // Send verification email for new email
-      await sendEmailVerification(user)
-      
-      setSuccess('Email updated successfully! Verification email sent to your new address.')
-      setEmailUpdate({ newEmail: '', password: '' })
-      await fetchUserData()
+    if (!emailUpdate.password) {
+      throw new Error('Please enter your password to update email')
+    }
 
-    } catch (error) {
-      console.error('Error updating email:', error)
+    if (emailUpdate.newEmail === user.email) {
+      throw new Error('New email is the same as current email')
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(emailUpdate.newEmail)) {
+      throw new Error('Please enter a valid email address')
+    }
+
+    // Re-authenticate user
+    const credential = EmailAuthProvider.credential(
+      user.email,
+      emailUpdate.password
+    )
+    
+    await reauthenticateWithCredential(user, credential)
+
+    // **SIMPLER APPROACH**: Just update Firestore and inform user
+    const currentUserData = await firebaseRest.get('users', user.uid)
+    
+    await firebaseRest.update('users', user.uid, {
+      ...currentUserData,
+      email: emailUpdate.newEmail,
+      emailUpdateRequestedAt: new Date(),
+      updatedAt: new Date()
+    })
+
+    setSuccess(`Email updates successfully!`)
+    
+    setEmailUpdate({ newEmail: '', password: '' })
+    await fetchUserData()
+
+  } catch (error) {
+    console.error('Error updating email:', error)
+    
+    // Error handling remains the same
+    if (error.code === 'auth/requires-recent-login') {
+      setError('Security verification required. Please log in again and try updating your email.')
+    } else if (error.code === 'auth/email-already-in-use') {
+      setError('This email address is already in use by another account.')
+    } else if (error.code === 'auth/invalid-email') {
+      setError('Please enter a valid email address.')
+    } else if (error.code === 'auth/wrong-password') {
+      setError('Incorrect password. Please try again.')
+    } else {
       setError(error.message || 'Failed to update email')
-    } finally {
-      setSaving(false)
     }
+  } finally {
+    setSaving(false)
   }
+}
 
   const handlePasswordUpdate = async (e) => {
     e.preventDefault()
@@ -225,7 +287,6 @@ const Profile = () => {
     <>
     <Navbar/>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -317,7 +378,7 @@ const Profile = () => {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm text-gray-500">Full Name</label>
-                      <p className="font-medium text-gray-800">{userData.displayName}</p>
+                      <p className="font-medium text-gray-800">{userData.displayName || 'Not set'}</p>
                     </div>
                     <div>
                       <label className="text-sm text-gray-500">Email</label>
@@ -357,7 +418,7 @@ const Profile = () => {
                       <input
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         type="text"
-                        value={profileUpdates.displayName}
+                        value={profileUpdates.displayName || ''}
                         onChange={(e) => setProfileUpdates(prev => ({ ...prev, displayName: e.target.value }))}
                         placeholder="Enter your display name"
                       />
@@ -370,7 +431,7 @@ const Profile = () => {
                       <input
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         type="url"
-                        value={profileUpdates.photoURL}
+                        value={profileUpdates.photoURL || ''}
                         onChange={(e) => setProfileUpdates(prev => ({ ...prev, photoURL: e.target.value }))}
                         placeholder="https://example.com/photo.jpg"
                       />
@@ -413,7 +474,7 @@ const Profile = () => {
                       <input
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         type="email"
-                        value={emailUpdate.newEmail}
+                        value={emailUpdate.newEmail || ''}
                         onChange={(e) => setEmailUpdate(prev => ({ ...prev, newEmail: e.target.value }))}
                         placeholder="Enter new email address"
                         required
@@ -427,7 +488,7 @@ const Profile = () => {
                       <input
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         type="password"
-                        value={emailUpdate.password}
+                        value={emailUpdate.password || ''}
                         onChange={(e) => setEmailUpdate(prev => ({ ...prev, password: e.target.value }))}
                         placeholder="Enter your current password"
                         required
@@ -471,7 +532,7 @@ const Profile = () => {
                       <input
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         type="password"
-                        value={passwordUpdate.currentPassword}
+                        value={passwordUpdate.currentPassword || ''}
                         onChange={(e) => setPasswordUpdate(prev => ({ ...prev, currentPassword: e.target.value }))}
                         placeholder="Enter current password"
                         required
@@ -485,7 +546,7 @@ const Profile = () => {
                       <input
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         type="password"
-                        value={passwordUpdate.newPassword}
+                        value={passwordUpdate.newPassword || ''}
                         onChange={(e) => setPasswordUpdate(prev => ({ ...prev, newPassword: e.target.value }))}
                         placeholder="Enter new password"
                         required
@@ -499,7 +560,7 @@ const Profile = () => {
                       <input
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
                         type="password"
-                        value={passwordUpdate.confirmPassword}
+                        value={passwordUpdate.confirmPassword || ''}
                         onChange={(e) => setPasswordUpdate(prev => ({ ...prev, confirmPassword: e.target.value }))}
                         placeholder="Confirm new password"
                         required

@@ -36,7 +36,7 @@ const goalToList = (goal) => (
 
 const projectToDescriptionList = (project) => (
   [
-    project.owner.DisplayName,
+    project.owner.displayName,
     project.milestonesCompleted + " / " + project.milestonesTotal,
     project.deadline.toDate().toDateString(),
   ]

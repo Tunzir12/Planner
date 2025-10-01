@@ -54,7 +54,7 @@ const ProjectList = () => {
     deadline: new Date(deadline),
     milestonesCompleted: 1,
     milestonesTotal: 3,
-    name: name,
+    name: currentUser.displayName,
     owner: currentUser.uid,
     members: [currentUser.uid]
   })
@@ -82,6 +82,10 @@ const ProjectList = () => {
               required
             />
             <br />
+            <label>
+              Add users by email:
+              <input type="email" name='email' />
+            </label>
             <label>
               Deadline:
               <input

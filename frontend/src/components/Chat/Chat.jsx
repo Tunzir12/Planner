@@ -303,40 +303,6 @@ export default function Chat({ otherUserId, isGroupChat = false, groupData = nul
   return (
     <div className="flex flex-col h-full bg-white">
       
-      {/* Chat header */}
-      <div className="p-4 border-b bg-gray-50">
-        <div className="flex items-center space-x-3">
-          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold ${
-            isGroupChat ? 'bg-purple-500' : 'bg-blue-500'
-          }`}>
-            {isGroupChat ? (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            ) : (
-              otherUserData?.displayName?.charAt(0) || otherUserData?.email?.charAt(0) || 'U'
-            )}
-          </div>
-          <div>
-            <h2 className="font-semibold text-gray-800">
-              {isGroupChat ? otherUserData?.name : (otherUserData?.displayName || otherUserData?.email || 'Loading...')}
-              {isGroupChat && (
-                <span className="ml-2 text-xs text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
-                  Group
-                </span>
-              )}
-            </h2>
-            <p className="text-sm text-gray-500">
-              {isGroupChat ? (
-                `${otherUserData?.participants?.length || 0} members`
-              ) : (
-                isConnected ? 'Online' : 'Offline'
-              )}
-            </p>
-          </div>
-        </div>
-      </div>
-      
       {/* Connection status */}
       {!isConnected && (
         <div className="p-2 bg-yellow-100 text-center text-sm text-yellow-800">

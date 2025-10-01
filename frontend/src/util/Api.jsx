@@ -204,7 +204,11 @@ const addProject = (project) => {
   }
   return inner()
 }
+//////////////////// Update user information /////////////////////
 
+
+
+///////////////////// API ///////////////////////////////
 const API = {
   getUserProjects: getUserProjects,
   getUser: getUser,
