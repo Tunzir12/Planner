@@ -1,51 +1,47 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
-import Table from '../components/Table'
-import User from '../components/User'
-import PopupForm from '../components/PopupForm.jsx'
-import Loading from '../components/Loading'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import Navbar from '../components/Navbar';
+import Table from '../components/Table';
+import User from '../components/User';
+import PopupForm from '../components/PopupForm.jsx';
+import Loading from '../components/Loading';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../components/routeComp/privateRoute';
 
-import API from '../util/Api.jsx'
+import API from '../util/Api.jsx';
 
-const HEADERS = [
-  "Name", "Owner", "Goals", "Deadline"
-]
+const HEADERS = ['Name', 'Owner', 'Goals', 'Deadline'];
 
-const projectToList = (pr) => (
-  [
-    <Link to={"/projects/" + pr.id} className="font-medium text-gray-900 whitespace-nowrap dark:text-white" >
-      {pr.name}
-    </Link>,
+const projectToList = pr => [
+  <Link
+    to={'/projects/' + pr.id}
+    className='font-medium text-gray-900 whitespace-nowrap dark:text-white'
+  >
+    {pr.name}
+  </Link>,
 
-    <User user={pr.owner} />,
+  <User user={pr.owner} />,
 
-    pr.milestonesCompleted + " / " + pr.milestonesTotal,
+  pr.milestonesCompleted + ' / ' + pr.milestonesTotal,
 
-    pr.deadline.toDate().toDateString(),
-  ]
-)
+  pr.deadline.toDate().toDateString(),
+];
 
 const ProjectList = () => {
-
   const { currentUser } = useAuth();
   const { data: projects, loading, error } = API.getUserProjects(currentUser.uid);
 
-
   if (loading)
     return (
-      <div className="dark:bg-gray-900 min-h-screen h-full">
+      <div className='dark:bg-gray-900 min-h-screen h-full'>
         <Navbar />
         <Loading></Loading>
-      </div >
-    )
+      </div>
+    );
 
   if (error) {
-    console.log(error)
-    return (<div>Error</div>)
+    console.log(error);
+    return <div>Error</div>;
   }
-
 
   const list = projects.map(projectToList);
   const keys = projects.map(project => project.id);
@@ -56,49 +52,37 @@ const ProjectList = () => {
     milestonesTotal: 3,
     name: currentUser.displayName,
     owner: currentUser.uid,
-    members: [currentUser.uid]
-  })
+    members: [currentUser.uid],
+  });
 
-
-  const handleProjectFormData = (formData) => {
-    API.addProject(createProject(
-      formData.get("name"),
-      formData.get("deadline")
-    ))
-  }
+  const handleProjectFormData = formData => {
+    API.addProject(createProject(formData.get('name'), formData.get('deadline')));
+  };
 
   return (
-    <div className="dark:bg-gray-900 min-h-screen h-full">
+    <div className='dark:bg-gray-900 min-h-screen h-full'>
       <Navbar />
-      <div className="px-6 ">
-        <h1 className="px-6 py-4 text-gray-900 dark:text-white"> Projects</h1>
+      <div className='px-6 '>
+        <h1 className='px-6 py-4 text-gray-900 dark:text-white'> Projects</h1>
         <Table headers={HEADERS} data={list} keys={keys} />
-        <PopupForm title={"New Project"} handleFormData={handleProjectFormData}>
+        <PopupForm title={'New Project'} handleFormData={handleProjectFormData}>
           <label>
             Title:
-            <input
-              type="text"
-              name="name"
-              required
-            />
+            <input type='text' name='name' required />
             <br />
             <label>
               Add users by email:
-              <input type="email" name='email' />
+              <input type='email' name='email' />
             </label>
             <label>
               Deadline:
-              <input
-                type="date"
-                name="deadline"
-                required
-              />
+              <input type='date' name='deadline' required />
             </label>
           </label>
         </PopupForm>
       </div>
-    </div >
-  )
-}
+    </div>
+  );
+};
 
-export default ProjectList
+export default ProjectList;

@@ -27,13 +27,13 @@ class FirebaseRestService {
     const url = `${this.baseUrl}${endpoint}`;
     const defaultOptions = {
       headers: {
-        'Authorization': `Bearer ${idToken}`,
+        Authorization: `Bearer ${idToken}`,
         'Content-Type': 'application/json',
       },
     };
 
     const response = await fetch(url, { ...defaultOptions, ...options });
-    
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Firestore API error:', errorText);
@@ -43,7 +43,7 @@ class FirebaseRestService {
     if (options.method !== 'DELETE') {
       return await response.json();
     }
-    
+
     return null;
   }
 
@@ -76,7 +76,7 @@ class FirebaseRestService {
         const field = document.fields[key];
         const fieldType = Object.keys(field)[0];
         let value = field[fieldType];
-        
+
         if (fieldType === 'timestampValue') {
           value = new Date(value);
         } else if (fieldType === 'integerValue') {
@@ -88,7 +88,7 @@ class FirebaseRestService {
         } else if (fieldType === 'nullValue') {
           value = null;
         }
-        
+
         result[key] = value;
       });
     }
@@ -118,13 +118,13 @@ class FirebaseRestService {
     try {
       // Use the list API and filter client-side
       const result = await this.request(`/${collection}`);
-      
+
       if (!result.documents) {
         return [];
       }
-      
+
       let documents = result.documents.map(doc => this.fromFirestoreFormat(doc));
-      
+
       // Apply filters client-side
       if (filters.length > 0) {
         documents = documents.filter(doc => {
@@ -137,7 +137,7 @@ class FirebaseRestService {
           });
         });
       }
-      
+
       return documents;
     } catch (error) {
       console.error('Error in getAll:', error);
@@ -155,9 +155,9 @@ class FirebaseRestService {
           fieldFilter: {
             field: { fieldPath: field },
             op: operator,
-            value: this.toFirestoreValue(value)
-          }
-        }
+            value: this.toFirestoreValue(value),
+          },
+        },
       };
 
       const result = await this.request(`:runQuery`, {

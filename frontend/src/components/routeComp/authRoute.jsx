@@ -5,6 +5,6 @@ export default function AuthRoute() {
   const { currentUser, loading } = useAuth();
 
   if (loading) return <div>Loading...</div>;
-  
-  return !currentUser ? <Outlet /> : <Navigate to="/home" replace />;
+
+  return !currentUser ? <Outlet /> : <Navigate to='/home' replace />;
 }

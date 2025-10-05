@@ -17,11 +17,11 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserData = async (uid) => {
+    const fetchUserData = async uid => {
       const db = getFirestore();
       const userRef = doc(db, 'users', uid);
       const userSnap = await getDoc(userRef);
-      
+
       if (userSnap.exists()) {
         setUserData(userSnap.data());
       } else {
@@ -31,7 +31,7 @@ export function AuthProvider({ children }) {
 
     setPersistence(auth, browserLocalPersistence)
       .then(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async user => {
           setCurrentUser(user);
           if (user) {
             await fetchUserData(user.uid);
@@ -42,21 +42,17 @@ export function AuthProvider({ children }) {
         });
         return unsubscribe;
       })
-      .catch((error) => {
-        console.error("Auth persistence error:", error);
+      .catch(error => {
+        console.error('Auth persistence error:', error);
         setLoading(false);
       });
   }, []);
 
   const value = {
     currentUser,
-    userData,       // Add userData to context value
-    loading
+    userData, // Add userData to context value
+    loading,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 }

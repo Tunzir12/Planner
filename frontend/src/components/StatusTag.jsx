@@ -1,34 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-const tagStyle = "rounded p-2"
+const tagStyle = 'rounded p-2';
 const tags = [
-  { label: "Not Started", color: "text-gray-400" },
-  { label: "Started", color: "text-yellow-400" },
-  { label: "Completed", color: "text-green-400" },
-  { label: "Blocked", color: "text-red-400" },
-]
+  { label: 'Not Started', color: 'text-gray-400' },
+  { label: 'Started', color: 'text-yellow-400' },
+  { label: 'Completed', color: 'text-green-400' },
+  { label: 'Blocked', color: 'text-red-400' },
+];
 
-
-const unkownTag = { label: "Unkown", color: "text-red-400" }
+const unkownTag = { label: 'Unkown', color: 'text-red-400' };
 
 const StatusTag = ({ statusId, changeable = true, updateStatus }) => {
-
   const [selectedOption, setSelectedOption] = useState(statusId);
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     setSelectedOption(event.target.value);
-    updateStatus(event.target.value)
+    updateStatus(event.target.value);
   };
 
   if (statusId >= tags.length)
-    return (<div className={tagstyle + unkownTag.color}>{unkownTag.label}</div>)
+    return <div className={tagstyle + unkownTag.color}>{unkownTag.label}</div>;
 
-  const selectStyle = tagStyle + " " + tags[selectedOption].color;
+  const selectStyle = tagStyle + ' ' + tags[selectedOption].color;
 
-  if (!changeable)
-    return (
-      <div className={selectStyle}>{tags[statusId].label}</div>
-    )
+  if (!changeable) return <div className={selectStyle}>{tags[statusId].label}</div>;
 
   return (
     <div className=''>
@@ -38,7 +33,7 @@ const StatusTag = ({ statusId, changeable = true, updateStatus }) => {
         ))}
       </select>
     </div>
-  )
-}
+  );
+};
 
 export default StatusTag;

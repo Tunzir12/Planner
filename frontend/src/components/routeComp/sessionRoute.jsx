@@ -5,6 +5,6 @@ export default function SessionRoute() {
   const { currentUser, loading } = useAuth();
 
   if (loading) return <div>Loading...</div>;
-  
-  return currentUser ? <Outlet /> : <Navigate to="/" replace />;
+
+  return currentUser ? <Outlet /> : <Navigate to='/' replace />;
 }

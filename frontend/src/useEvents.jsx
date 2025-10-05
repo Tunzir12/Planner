@@ -32,13 +32,13 @@ export const useEvents = () => {
     }
   };
 
-  const createEvent = async (eventData) => {
+  const createEvent = async eventData => {
     setLoading(true);
     setError(null);
     try {
       const newEvent = await firebaseRest.create('events', {
         ...eventData,
-        userId: user.uid
+        userId: user.uid,
       });
       setEvents(prev => [...prev, newEvent]);
       return newEvent;
@@ -55,8 +55,11 @@ export const useEvents = () => {
     setLoading(true);
     setError(null);
     try {
-      const updatedEvent = await firebaseRest.update('events', id,{ ...eventData, userId: user.uid});
-      setEvents(prev => prev.map(event => event.id === id ? updatedEvent : event));
+      const updatedEvent = await firebaseRest.update('events', id, {
+        ...eventData,
+        userId: user.uid,
+      });
+      setEvents(prev => prev.map(event => (event.id === id ? updatedEvent : event)));
       return updatedEvent;
     } catch (err) {
       setError(err.message);
@@ -67,7 +70,7 @@ export const useEvents = () => {
     }
   };
 
-  const deleteEvent = async (id) => {
+  const deleteEvent = async id => {
     setLoading(true);
     setError(null);
     try {
@@ -90,6 +93,6 @@ export const useEvents = () => {
     createEvent,
     updateEvent,
     deleteEvent,
-    refetch: fetchEvents
+    refetch: fetchEvents,
   };
 };
