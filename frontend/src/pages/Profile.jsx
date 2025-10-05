@@ -25,11 +25,6 @@ const Profile = () => {
     photoURL: ''
   })
 
-  const [emailUpdate, setEmailUpdate] = useState({
-    newEmail: '',
-    password: ''
-  })
-
   const [passwordUpdate, setPasswordUpdate] = useState({
     currentPassword: '',
     newPassword: '',
@@ -57,16 +52,9 @@ const Profile = () => {
         emailVerified: user.emailVerified || false
       })
 
-      // CORRECTED: Initialize with actual user data
       setProfileUpdates({
-        displayName: userDoc.displayName || '', // Use fetched data
-        photoURL: userDoc.photoURL || '' // Use fetched data
-      })
-
-      // Reset form states
-      setEmailUpdate({
-        newEmail: '',
-        password: ''
+        displayName: userDoc.displayName || '', 
+        photoURL: userDoc.photoURL || ''
       })
       
       setPasswordUpdate({
@@ -128,12 +116,11 @@ const handleProfileUpdate = async (e) => {
 
     // Only update Firestore if there are changes
     if (Object.keys(updates).length > 0) {
-      // Get current data first to preserve other fields
       const currentUserData = await firebaseRest.get('users', user.uid)
       await firebaseRest.update('users', user.uid, {
-        ...currentUserData, // Preserve all existing data
-        ...updates, // Add our updates
-        updatedAt: new Date() // Add timestamp
+        ...currentUserData, 
+        ...updates,
+        updatedAt: new Date() 
       })
     }
 
@@ -148,77 +135,6 @@ const handleProfileUpdate = async (e) => {
   }
 }
 
-const handleEmailUpdate = async (e) => {
-  e.preventDefault()
-  setSaving(true)
-  setError('')
-  setSuccess('')
-
-  try {
-    const user = auth.currentUser
-    if (!user) throw new Error('User not authenticated')
-
-    // Validation checks
-    if (!emailUpdate.newEmail) {
-      throw new Error('Please enter a new email address')
-    }
-
-    if (!emailUpdate.password) {
-      throw new Error('Please enter your password to update email')
-    }
-
-    if (emailUpdate.newEmail === user.email) {
-      throw new Error('New email is the same as current email')
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(emailUpdate.newEmail)) {
-      throw new Error('Please enter a valid email address')
-    }
-
-    // Re-authenticate user
-    const credential = EmailAuthProvider.credential(
-      user.email,
-      emailUpdate.password
-    )
-    
-    await reauthenticateWithCredential(user, credential)
-
-    // **SIMPLER APPROACH**: Just update Firestore and inform user
-    const currentUserData = await firebaseRest.get('users', user.uid)
-    
-    await firebaseRest.update('users', user.uid, {
-      ...currentUserData,
-      email: emailUpdate.newEmail,
-      emailUpdateRequestedAt: new Date(),
-      updatedAt: new Date()
-    })
-
-    setSuccess(`Email updates successfully!`)
-    
-    setEmailUpdate({ newEmail: '', password: '' })
-    await fetchUserData()
-
-  } catch (error) {
-    console.error('Error updating email:', error)
-    
-    // Error handling remains the same
-    if (error.code === 'auth/requires-recent-login') {
-      setError('Security verification required. Please log in again and try updating your email.')
-    } else if (error.code === 'auth/email-already-in-use') {
-      setError('This email address is already in use by another account.')
-    } else if (error.code === 'auth/invalid-email') {
-      setError('Please enter a valid email address.')
-    } else if (error.code === 'auth/wrong-password') {
-      setError('Incorrect password. Please try again.')
-    } else {
-      setError(error.message || 'Failed to update email')
-    }
-  } finally {
-    setSaving(false)
-  }
-}
 
   const handlePasswordUpdate = async (e) => {
     e.preventDefault()
@@ -313,19 +229,6 @@ const handleEmailUpdate = async (e) => {
                   </div>
                 </button>
 
-                <button
-                  onClick={() => setActiveSection('email')}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 ${
-                    activeSection === 'email'
-                      ? 'bg-blue-50 text-blue-600 border border-blue-200'
-                      : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                    <span className="font-medium">Email Settings</span>
-                  </div>
-                </button>
 
                 <button
                   onClick={() => setActiveSection('password')}
@@ -450,64 +353,6 @@ const handleEmailUpdate = async (e) => {
                         </div>
                       ) : (
                         'Update Profile'
-                      )}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
-
-            {/* Email Settings Section */}
-            {activeSection === 'email' && (
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center mb-6">
-                  <div className="w-3 h-6 bg-blue-600 rounded-r-lg mr-3"></div>
-                  <h2 className="text-xl font-semibold text-gray-800">Email Settings</h2>
-                </div>
-
-                <form onSubmit={handleEmailUpdate}>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        New Email Address
-                      </label>
-                      <input
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                        type="email"
-                        value={emailUpdate.newEmail || ''}
-                        onChange={(e) => setEmailUpdate(prev => ({ ...prev, newEmail: e.target.value }))}
-                        placeholder="Enter new email address"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Current Password
-                      </label>
-                      <input
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
-                        type="password"
-                        value={emailUpdate.password || ''}
-                        onChange={(e) => setEmailUpdate(prev => ({ ...prev, password: e.target.value }))}
-                        placeholder="Enter your current password"
-                        required
-                      />
-                      <p className="text-sm text-gray-500 mt-1">For security, please confirm your password</p>
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={saving}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {saving ? (
-                        <div className="flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Updating Email...
-                        </div>
-                      ) : (
-                        'Update Email Address'
                       )}
                     </button>
                   </div>
