@@ -75,3 +75,11 @@ Text: #fafaf6
 ## Prototype
 
 ![Prototype image](./assets/tddd27.png)
+
+## How to run
+
+- go to 'frontend' folder and open terminal
+- run ' npm install '
+- run ' npm run dev '
+- run 'npm run ws-server' for chat
+
