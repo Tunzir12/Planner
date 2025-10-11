@@ -106,7 +106,7 @@ export default function Chat({ otherUserId, isGroupChat = false, groupData = nul
           const otherUserDisplayName =
             otherUserData.displayName || otherUserData.email || 'Unknown User';
           const currentUserEmail = currentUser.email || 'No email';
-          const otherUserEmail = otherUserData.email || 'No email';
+          const otherUserEmail = otherUs; // Add userData to context valueerData.email || 'No email';
 
           const participantInfo = {
             [currentUser.uid]: {

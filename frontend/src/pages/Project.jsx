@@ -9,7 +9,7 @@ import Table from '../components/Table';
 import Loading from '../components/Loading';
 import PopupForm from '../components/PopupForm.jsx';
 
-import API from '../util/Api.jsx';
+import { firebaseRest } from '../firebaseRest.jsx';
 
 // Headers
 const GoalHeaders = ['Name', 'Assigned', 'Progress', 'Deadline'];
@@ -24,30 +24,85 @@ const goalToList = goal => [
   >
     {goal.title}
   </Link>,
-  goal.assigned,
+  goal.assignedUserId || 'Unassigned',
   <StatusTag
     statusId={goal.status}
-    updateStatus={status => API.setGoal(goal.id, { status: status })}
+    updateStatus={async status => {
+      try {
+        await firebaseRest.update('goals', goal.id, { status: status });
+      } catch (err) {
+        console.error('Error updating goal status:', err);
+      }
+    }}
   />,
-  goal.deadline.toDate().toDateString(),
+  goal.deadline ? new Date(goal.deadline).toDateString() : 'No deadline',
 ];
 
 const projectToDescriptionList = project => [
-  project.owner.displayName,
-  project.milestonesCompleted + ' / ' + project.milestonesTotal,
-  project.deadline.toDate().toDateString(),
+  project.ownerName || project.owner || 'Unknown',
+  (project.milestonesCompleted || 0) + ' / ' + (project.milestonesTotal || 0),
+  project.deadline ? new Date(project.deadline).toDateString() : 'No deadline',
 ];
 
 // Main component
 const Project = () => {
   const { id } = useParams();
+  const [project, setProject] = React.useState(null);
+  const [goals, setGoals] = React.useState([]);
+  const [loadingProject, setLoadingProject] = React.useState(true);
+  const [loadingGoals, setLoadingGoals] = React.useState(true);
+  const [error, setError] = React.useState(null);
 
-  var { data: project, loading: loadingProject, error } = API.getProject(id);
-  var { data: goals, loading: loadingGoals } = API.getGoalsFromProjectId(id);
+  // Fetch project data
+  React.useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        setLoadingProject(true);
+        const projectData = await firebaseRest.get('projects', id);
+        setProject(projectData);
+      } catch (err) {
+        console.error('Error fetching project:', err);
+        setError(err.message);
+      } finally {
+        setLoadingProject(false);
+      }
+    };
+
+    if (id) {
+      fetchProject();
+    }
+  }, [id]);
+
+  // Fetch project goals
+  React.useEffect(() => {
+    const fetchGoals = async () => {
+      try {
+        setLoadingGoals(true);
+        const projectGoals = await firebaseRest.query('goals', 'projectId', 'EQUAL', id);
+        setGoals(projectGoals);
+      } catch (err) {
+        console.error('Error fetching goals:', err);
+        setError(err.message);
+      } finally {
+        setLoadingGoals(false);
+      }
+    };
+
+    if (id) {
+      fetchGoals();
+    }
+  }, [id]);
 
   if (error) {
     console.log(error);
-    return <div>error</div>;
+    return (
+      <div>
+        <Navbar />
+        <div className='dark:bg-gray-900 min-h-screen h-full p-6'>
+          <div className='text-red-500'>Error: {error}</div>
+        </div>
+      </div>
+    );
   }
 
   if (loadingProject || loadingGoals)
@@ -58,6 +113,17 @@ const Project = () => {
       </div>
     );
 
+  if (!project) {
+    return (
+      <div>
+        <Navbar />
+        <div className='dark:bg-gray-900 min-h-screen h-full p-6'>
+          <div>Project not found</div>
+        </div>
+      </div>
+    );
+  }
+
   const descriptionList = projectToDescriptionList(project);
   const goalLists = goals.map(goalToList);
   const goalKeys = goals.map(goal => goal.id);
@@ -65,12 +131,38 @@ const Project = () => {
   const createGoal = (title, deadline) => ({
     assignedUserId: '',
     deadline: new Date(deadline),
-    projectId: project.id,
+    projectId: id,
     title: title,
+    status: 0, // Default status
+    createdAt: new Date(),
   });
 
-  const handleCreateGoal = formData => {
-    API.addGoal(createGoal(formData.get('title'), formData.get('deadline')));
+  const handleCreateGoal = async formData => {
+    try {
+      const title = formData.get('title');
+      const deadline = formData.get('deadline');
+      const newGoal = createGoal(title, deadline);
+
+      const createdGoal = await firebaseRest.create('goals', newGoal);
+
+      // Update local state
+      setGoals(prev => [...prev, createdGoal]);
+
+      // Update project milestones count
+      const updatedMilestonesTotal = (project.milestonesTotal || 0) + 1;
+      await firebaseRest.update('projects', id, {
+        milestonesTotal: updatedMilestonesTotal,
+      });
+
+      // Update local project state
+      setProject(prev => ({
+        ...prev,
+        milestonesTotal: updatedMilestonesTotal,
+      }));
+    } catch (err) {
+      console.error('Error creating goal:', err);
+      alert('Failed to create goal: ' + err.message);
+    }
   };
 
   return (
