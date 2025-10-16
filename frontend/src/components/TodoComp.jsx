@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from './routeComp/privateRoute';
-import { firebaseRest } from '../firebaseRest';
+import { firebaseRest } from '../../api/firebaseRest';
 
 const createTodoService = () => {
   const baseService = collection => ({

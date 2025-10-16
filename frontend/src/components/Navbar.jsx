@@ -1,4 +1,4 @@
-import { auth, signOut } from '../firebase';
+import { auth, signOut } from '../../../backend/firebase';
 import { useNavigate } from 'react-router-dom';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo_color.svg';

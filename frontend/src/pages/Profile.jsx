@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react';
-import { auth } from '../firebase';
-import { firebaseRest } from '../firebaseRest';
+import { auth } from '../../../backend/firebase';
+import { firebaseRest } from '../../api/firebaseRest';
 import Navbar from '../components/Navbar';
 import {
   updatePassword,

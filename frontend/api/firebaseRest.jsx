@@ -1,4 +1,4 @@
-import { auth } from './firebase';
+import { auth } from '../../backend/firebase';
 
 const FIRESTORE_URL = 'https://firestore.googleapis.com/v1/projects';
 

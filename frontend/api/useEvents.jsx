@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { firebaseRest } from './firebaseRest';
-import { auth } from './firebase';
+import { auth } from '../../backend/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 export const useEvents = () => {

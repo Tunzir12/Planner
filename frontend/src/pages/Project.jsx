@@ -9,7 +9,7 @@ import Table from '../components/Table';
 import Loading from '../components/Loading';
 import PopupForm from '../components/PopupForm.jsx';
 
-import { firebaseRest } from '../firebaseRest.jsx';
+import { firebaseRest } from '../../api/firebaseRest.jsx';
 
 // Headers
 const GoalHeaders = ['Name', 'Assigned', 'Progress', 'Deadline'];

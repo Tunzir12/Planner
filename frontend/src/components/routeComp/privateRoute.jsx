@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../../firebase';
+import { auth } from '../../../../backend/firebase';
 import { onAuthStateChanged, setPersistence, browserLocalPersistence } from 'firebase/auth';
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
 

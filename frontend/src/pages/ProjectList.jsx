@@ -6,7 +6,7 @@ import PopupForm from '../components/PopupForm.jsx';
 import Loading from '../components/Loading';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../components/routeComp/privateRoute';
-import { firebaseRest } from '../firebaseRest';
+import { firebaseRest } from '../../api/firebaseRest.jsx';
 
 const HEADERS = ['Name', 'Owner', 'Goals', 'Deadline'];
 

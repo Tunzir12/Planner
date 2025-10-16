@@ -13,7 +13,7 @@ import {
   updateDoc,
   arrayUnion,
 } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db } from '../../../../backend/firebase';
 import { useAuth } from '../routeComp/privateRoute';
 
 export default function Chat({ otherUserId, isGroupChat = false, groupData = null }) {

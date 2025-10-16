@@ -3,11 +3,11 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { useRef, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, Transition, } from '@headlessui/react';
 import { Fragment } from 'react';
-import { useEvents } from '../useEvents';
+import { useEvents } from '../../api/useEvents';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../firebase';
+import { auth } from '../../../backend/firebase';
 
 const Calendar = () => {
   const [user] = useAuthState(auth);
