@@ -49,7 +49,7 @@ export default function Chat({ otherUserId, isGroupChat = false, groupData = nul
           if (groupSnap.exists()) {
             setOtherUserData({
               ...groupSnap.data(),
-              isGroupChat: true,
+              isGroupChat: true, 
             });
           }
         } else {
