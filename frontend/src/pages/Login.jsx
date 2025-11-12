@@ -1,6 +1,6 @@
 import { React, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { auth, signInWithEmailAndPassword } from '../../../backend/firebase';
+import { auth, signInWithEmailAndPassword } from '../../backend/firebase';
 
 import logo from '../assets/logo_color.svg';
 

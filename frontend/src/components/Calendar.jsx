@@ -7,7 +7,7 @@ import { Dialog, Transition, } from '@headlessui/react';
 import { Fragment } from 'react';
 import { useEvents } from '../../api/useEvents';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '../../../backend/firebase';
+import { auth } from '../../backend/firebase';
 
 const Calendar = () => {
   const [user] = useAuthState(auth);

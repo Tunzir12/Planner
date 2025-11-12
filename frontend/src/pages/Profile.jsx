@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { auth } from '../../../backend/firebase';
+import { auth } from '../../backend/firebase';
 import { firebaseRest } from '../../api/firebaseRest';
 import Navbar from '../components/Navbar';
 import {

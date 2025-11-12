@@ -1,4 +1,4 @@
-import { auth } from '../../backend/firebase';
+import { auth } from '../backend/firebase';
 
 const FIRESTORE_URL = 'https://firestore.googleapis.com/v1/projects';
 
@@ -200,50 +200,6 @@ class FirebaseRestService {
     }
   }
 
-  //The toFirestoreFormat method:
-  toFirestoreFormat(data) {
-    const fields = {};
-    Object.keys(data).forEach(key => {
-      const value = data[key];
-      if (typeof value === 'string') {
-        fields[key] = { stringValue: value };
-      } else if (typeof value === 'boolean') {
-        fields[key] = { booleanValue: value };
-      } else if (typeof value === 'number') {
-        fields[key] = { integerValue: value };
-      } else if (value instanceof Date) {
-        fields[key] = { timestampValue: value.toISOString() };
-      } else if (value === null) {
-        fields[key] = { nullValue: null };
-      } else if (Array.isArray(value)) {
-        // Handle arrays
-        fields[key] = {
-          arrayValue: {
-            values: value.map(item => {
-              if (typeof item === 'object' && item !== null) {
-                return { mapValue: { fields: this.toFirestoreFormat(item).fields } };
-              } else if (typeof item === 'string') {
-                return { stringValue: item };
-              } else if (typeof item === 'number') {
-                return { integerValue: item };
-              } else if (typeof item === 'boolean') {
-                return { booleanValue: item };
-              }
-              return { nullValue: null };
-            }),
-          },
-        };
-      } else if (typeof value === 'object' && value !== null) {
-        // Handle objects
-        fields[key] = {
-          mapValue: {
-            fields: this.toFirestoreFormat(value).fields,
-          },
-        };
-      }
-    });
-    return { fields };
-  }
 
   // Helper to convert values to Firestore format for queries
   toFirestoreValue(value) {
