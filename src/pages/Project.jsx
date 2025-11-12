@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import DetailsList from '../components/DetailsList';
-import Divider from '../components/Divider';
-import Navbar from '../components/Navbar';
-import StatusTag from '../components/StatusTag';
-import Table from '../components/Table';
-import Loading from '../components/Loading';
+import DetailsList from '../components/DetailsList.jsx';
+import Divider from '../components/Divider.jsx';
+import Navbar from '../components/Navbar.jsx';
+import StatusTag from '../components/StatusTag.jsx';
+import Table from '../components/Table.jsx';
+import Loading from '../components/Loading.jsx';
 import PopupForm from '../components/PopupForm.jsx';
 
 import { firebaseRest } from '../../api/firebaseRest.jsx';

@@ -1,85 +1,12 @@
+# React + Vite
 
-# ![](./assets/logo_color_smol.png) GoalGetter
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Description
+Currently, two official plugins are available:
 
-A platform to keep track of project milestones, deadlines and todolists.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Color pallet
+## Expanding the ESLint configuration
 
-Primary: #3d6cb9
-Secondary: #00d1ff
-Accent: #00fff0
-Text: #fafaf6
-
-## Example pictures
-
-## Features
-
-* Calendar view
-* Todolist view
-* Project view
-* Journal view (perosnal/project)
-
-* Create shared projects
-* Assign tasks to users
-* Chat with project partners
-* comment on milestones
-
-## Frontend
-
-* React
-* Tailwind CSS
-
-## Backend
-
-* Firebase?
-
-## Milestones
-
-### Milestone 1
-
-* Dashboard with Calendar view
-* Todolist view
-* Projects View
-* Goal view
-* Journal view
-
-### Milestone 2
-
-* Defined database
-* Firebase integration
-* Firebase Authentication
-* Firebase Database
-
-### Milestone 3
-
-* Integrate database with views
-* Chat integration
-
-### Milestone 4
-
-* Fine tuning
-* Project Cleanup
-* Bug fixing
-
-## Timeline
-
-| Milestone |  Weeks |Deadline |
-| -------------- | --------------- | --------------- |
-| Milestone 1 | 17,18 | 25 April |
-| Milestone 2 |19,20| 8 May |
-| Milestone 3 |21,22| 23 May |
-| Milestone 4 |23| 6 June |
-
-## Prototype
-
-![Prototype image](./assets/tddd27.png)
-
-## How to run
-
-- go to 'frontend' folder and open terminal
-- run ' npm install '
-- run ' npm run dev '
-- run 'npm run ws-server' for chat
-
+If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

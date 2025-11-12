@@ -1,11 +1,11 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
-import Table from '../components/Table';
-import User from '../components/User';
+import Navbar from '../components/Navbar.jsx';
+import Table from '../components/Table.jsx';
+import User from '../components/User.jsx';
 import PopupForm from '../components/PopupForm.jsx';
-import Loading from '../components/Loading';
+import Loading from '../components/Loading.jsx';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../components/routeComp/privateRoute';
+import { useAuth } from '../components/routeComp/privateRoute.jsx';
 import { firebaseRest } from '../../api/firebaseRest.jsx';
 
 const HEADERS = ['Name', 'Owner', 'Goals', 'Deadline'];
