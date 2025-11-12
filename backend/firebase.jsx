@@ -9,14 +9,13 @@ import {
 } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyBmE9n9WEdH1iOPoYowF5T5PFJ1UvDxVJA',
-  authDomain: 'goalgetter-tddd27.firebaseapp.com',
-  databaseURL: 'https://goalgetter-tddd27-default-rtdb.europe-west1.firebasedatabase.app',
-  projectId: 'goalgetter-tddd27',
-  storageBucket: 'goalgetter-tddd27.firebasestorage.app',
-  messagingSenderId: '452788546474',
-  appId: '1:452788546474:web:46cbc35f0288f8c19419d3',
-  measurementId: 'G-CYYY69S9RV',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER,
+  appId: import.meta.env.VITE_FIREBASE_APPID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase
